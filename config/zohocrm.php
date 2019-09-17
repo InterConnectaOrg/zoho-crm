@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'applicationLogFilePath' =>  env('ZOHOCRM_APP_LOG_FILE_PATH', null),
+    'applicationLogFilePath' =>  storage_path('app/zoho/crm/oauth/logs'),
 
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +66,7 @@ return [
     |
     */
 
-    'token_persistence_path' =>  env('ZOHOCRM_TOKEN_PERSISTENCE_PATH', null),
+    'token_persistence_path' =>  storage_path('app/zoho/crm/oauth/tokens'),
 
     /*
     |--------------------------------------------------------------------------
