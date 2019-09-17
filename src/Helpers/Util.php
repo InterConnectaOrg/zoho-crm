@@ -52,12 +52,11 @@ trait Util
      * @param  ZCRMRecord $zcrmRecord [description]
      * @return array
      */
-    public static function getRecord(Record $record)
+    public static function getZcrmRecordData(Record $record)
     {
-        $record = $record->getData();
-
         $response = [];
         $response['id'] = $record->getEntityId();
+        $record = $record->getData();
         foreach ($record as $key => $value) {
             if ($value instanceof Record) {
                 $response[$key] = [

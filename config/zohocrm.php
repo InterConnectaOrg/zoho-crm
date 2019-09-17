@@ -99,7 +99,7 @@ return [
     |
     */
 
-    'apiBaseUrl' =>  env('ZOHOCRM_API_BASE_URL', 'www.zohoapis.com'),
+    'api_base_url' =>  env('ZOHOCRM_API_BASE_URL', 'www.zohoapis.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -110,7 +110,7 @@ return [
     |
     */
 
-    'apiVersion' =>  env('ZOHOCRM_API_VERSION', 'v2'),
+    'api_version' =>  env('ZOHOCRM_API_VERSION', 'v2'),
 
     /*
     |--------------------------------------------------------------------------
