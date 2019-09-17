@@ -2,15 +2,15 @@
 
 namespace Zoho\CRM;
 
-use ZCRMRestClient;
-use ZCRMModule;
-use ZCRMRecord;
-use ZCRMUser;
-use ZCRMException;
+use zcrmsdk\crm\setup\restclient\ZCRMRestClient;
+use zcrmsdk\crm\crud\ZCRMModule;
+use zcrmsdk\crm\crud\ZCRMRecord;
+use zcrmsdk\crm\setup\users\ZCRMUser;
+use zcrmsdk\crm\exception\ZCRMException;
 
 class API implements APIInterface
 {
-    use Util;
+    use Helpers\Util;
 
     /**
      * [protected description]
@@ -23,32 +23,10 @@ class API implements APIInterface
      * @param string $credentialsStorageMode [description]
      * @param [type] $credentialsTableName   [description]
      */
-    public function __construct()
+    public function __construct($credentials)
     {
-        ZCRMRestClient::initialize($this->getCredentials());
+        ZCRMRestClient::initialize($credentials);
         $this->zohoRestClient = ZCRMRestClient::getInstance();
-    }
-
-    /**
-     * [getCredentials description]
-     * @return [type] [description]
-     */
-    public function getCredentials()
-    {
-        return [
-            'client_id' =>  env('ZCRM_CLIENT_ID'),
-            'client_secret' =>  env('ZCRM_CLIENT_SECRET'),
-            'redirect_uri' =>  env('ZCRM_REDIRECT_URI'),
-            'currentUserEmail' =>  env('ZCRM_CURRENT_USER_EMAIL'),
-            'applicationLogFilePath' =>  env('ZCRM_APP_LOG_FILE_PATH'),
-            'token_persistence_path' =>  env('ZCRM_TOKEN_PERSISTENCE_PATH'),
-            'accounts_url' =>  env('ZCRM_ACCOUNTS_URL', 'https://accounts.zoho.com/'),
-            'sandbox' =>  env('ZCRM_SANDBOX', false),
-            'apiBaseUrl' =>  env('ZCRM_API_BASE_URL', 'www.zohoapis.com'),
-            'apiVersion' =>  env('ZCRM_API_VERSION', 'v2'),
-            'access_type' =>  env('ZCRM_ACCESS_TYPE', 'offline'),
-            'persistence_handler_class' =>  env('ZCRM_PERSISTENCE_HANDLER_CLASS', 'ZohoOAuthPersistenceHandler'),
-        ];
     }
 
     /**

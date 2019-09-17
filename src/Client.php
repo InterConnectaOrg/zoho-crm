@@ -4,6 +4,7 @@ namespace Zoho\CRM;
 
 class Client
 {
+    use Helpers\Credentials;
     /**
      * [protected description]
      * @var [type]
@@ -15,7 +16,7 @@ class Client
      */
     public function __construct()
     {
-        $this->client = new API();
+        $this->client = new API($this->getAllCredentials());
     }
 
     /**

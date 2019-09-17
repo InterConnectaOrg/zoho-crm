@@ -1,9 +1,9 @@
 <?php
 
-namespace Zoho\CRM;
+namespace Zoho\CRM\Helpers;
 
-use ZCRMRecord as Record;
-use ZCRMAttachment as Attachment;
+use zcrmsdk\crm\crud\ZCRMRecord as Record;
+use zcrmsdk\crm\crud\ZCRMAttachment as Attachment;
 
 trait Util
 {
