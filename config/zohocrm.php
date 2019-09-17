@@ -44,7 +44,7 @@ return [
     |
     */
 
-    'currentUserEmail' =>  env('ZOHOCRM_CURRENT_USER_EMAIL', null),
+    'current_user_email' =>  env('ZOHOCRM_CURRENT_USER_EMAIL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'applicationLogFilePath' =>  storage_path('app/zoho/crm/oauth/logs'),
+    'application_log_file_path' =>  storage_path('app/zoho/crm/oauth/logs'),
 
     /*
     |--------------------------------------------------------------------------
