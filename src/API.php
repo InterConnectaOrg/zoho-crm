@@ -162,7 +162,7 @@ class API implements APIInterface
             if ($expanded) {
                 $moreRecords = true;
                 while ($moreRecords) {
-                    $moduleInstance = ZCRMModule::getInstance()->getModuleInstance($module);
+                    $moduleInstance = ZCRMRestClient::getInstance()->getModuleInstance($module);
                     $bulkResponse = $moduleInstance->getRecords($cvId,$sortBy,$sortOrder,$page,$perPage);
 
                     $zcrmRecords = $bulkResponse->getData(); // $bulkResponse->getData(): return array of ZCRMRecord instances
