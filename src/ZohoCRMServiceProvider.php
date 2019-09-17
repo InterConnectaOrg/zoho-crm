@@ -8,6 +8,13 @@ use Illuminate\Support\ServiceProvider;
 class ZohoCRMServiceProvider extends ServiceProvider
 {
     /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
+
+    /**
      * Bootstrap the application services.
      *
      * @return void
@@ -50,9 +57,10 @@ class ZohoCRMServiceProvider extends ServiceProvider
             Console\SetupCommand::class,
         ]);
 
-        $this->app->bind('zohocrm', function ()
-        {
-            return $this->app->make('Zoho\CRM\Client');
+        $this->app->singleton('zohocrm', function ($app) {
+            return new Client();
         });
+
+        $this->app->alias('zohocrm', Client::class);
     }
 }
