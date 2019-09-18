@@ -4,7 +4,7 @@ namespace Zoho\CRM\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class ZohoCRMFacade extends Facade
+class ZohoCRM extends Facade
 {
     /**
      * Get the registered name of the component.
