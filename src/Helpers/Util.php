@@ -56,22 +56,9 @@ trait Util
      * @param  [type] $criteriaPatternMap [description]
      * @return [type]                     [description]
      */
-    public static function getCriteria($criteriaPatternMap)
+    public static function buildCriteria($criteria)
     {
-        $criteriaPatternArray = collect($criteriaPatternMap)
-                                ->filter(function ($criteriaItem, $criteriaIndex) {
-                                    return !is_string($criteriaItem);
-                                })
-                                ->map(function ($criteriaItem, $criteriaIndex) {
-                                    if (self::isMultidimensionalArray($criteriaItem)) {
-                                        return self::getCriteria($criteriaItem);
-                                    }
-
-                                    return '(' . $criteriaItem['field_name'] . ':' . $criteriaItem['search_condition'] ?? 'equals' . ':' . $criteriaItem['field_value'] . ')';
-                                })
-                                ->all();
-
-        return '(' . implode(isset($criteriaPatternMap['operator']) ? $criteriaPatternMap['operator'] : '', $criteriaPatternArray) . ')';
+        return "({$criteria['field']}:{$criteria['operator']}:{$criteria['value']})";
     }
 
     /**

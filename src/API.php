@@ -41,8 +41,6 @@ class API
     public function getRecords($module, $params = [])
     {
         try {
-            $response = [];
-
             $customViewId = isset($params['customViewId']) ? $params['customViewId'] : null;
             $sortBy = isset($params['sortBy']) ? $params['sortBy'] : null;
             $sortOrder = isset($params['sortOrder']) ? $params['sortOrder'] : null;
@@ -70,50 +68,35 @@ class API
         }
     }
 
-    /*
-    public function searchRecords($module, $mapCriteria, $params = [], $expanded = false)
+    /**
+     * [searchRecords description]
+     * @param  [type] $module   [description]
+     * @param  [type] $criteria [description]
+     * @param  array  $params   [description]
+     * @return [type]           [description]
+     */
+    public function searchRecords($module, $criteria, $params = [])
     {
         try {
-            $zcrmRecords = [];
-            $recordsResponse = [];
-            $moreRecords = false;
             $page = isset($params['page']) ? $params['page'] : 1;
             $perPage = isset($params['perPage']) ? $params['perPage'] : 200;
 
-            if ($expanded) {
-                $moreRecords = true;
-                while ($moreRecords) {
-                    $bulkApiResponse = ZCRMModule::getInstance($module)
-                                                ->searchRecordsByCriteria(Resolver::getCriteria($mapCriteria), $page, $perPage);
-                    $zcrmRecords = $bulkApiResponse->getData(); // $bulkResponse->getData(): array of ZCRMRecord instances
-                    $zcrmRequestInfo = $bulkApiResponse->getInfo();
-                    foreach ($zcrmRecords as $idx => $zcrmRecord) {
-                        array_push($recordsResponse, ZCRMUtil::getZcrmRecordData($zcrmRecord));
-                    }
-                    $moreRecords = $zcrmRequestInfo->getMoreRecords();
-                    $page++;
-                }
-                return [
-                    'records' => $recordsResponse,
-                    'count' => count($recordsResponse)
-                ];
-            }
-            $bulkApiResponse = ZCRMModule::getInstance($module)
-                                            ->searchRecordsByCriteria(Resolver::getCriteria($mapCriteria), $page, $perPage);
-            $zcrmRecords = $bulkApiResponse->getData(); // $bulkResponse->getData(): array of ZCRMRecord instances
-            $zcrmRequestInfo = $bulkApiResponse->getInfo();
-            foreach ($zcrmRecords as $idx => $zcrmRecord) {
-                $recordsResponse[$idx] = ZCRMUtil::getZcrmRecordData($zcrmRecord);
-            }
-            $infoResponse = [
-                'more_records' => $zcrmRequestInfo->getMoreRecords(),
-                'count' => $zcrmRequestInfo->getRecordCount(),
-                'page' => $zcrmRequestInfo->getPageNo(),
-                'per_page' => $zcrmRequestInfo->getPerPage(),
-            ];
+            $moduleInstance = $this->restClient->getModuleInstance($module);
+            $response = $moduleInstance->searchRecordsByCriteria(self::buildCriteria($criteria), $page, $perPage);
+
+            $records = $response->getData();
+            $info = $response->getInfo();
+
+            $parsedRecords = self::parseRecords($records);
+
             return [
-                'records' => $recordsResponse,
-                'info' => $infoResponse,
+                'records' => $parsedRecords,
+                'info' => [
+                    'more_records' => $info->getMoreRecords(),
+                    'count' => $info->getRecordCount(),
+                    'page' => $info->getPageNo(),
+                    'per_page' => $info->getPerPage(),
+                ],
             ];
         } catch (ZCRMException $e) {
             return [
@@ -127,5 +110,4 @@ class API
             ];
         }
     }
-    */
 }
