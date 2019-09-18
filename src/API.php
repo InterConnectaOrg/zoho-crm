@@ -10,7 +10,7 @@ use zcrmsdk\crm\crud\ZCRMRecord as Record;
 use zcrmsdk\crm\setup\users\ZCRMUser as User;
 use zcrmsdk\crm\exception\ZCRMException;
 
-class API implements APIInterface
+class API
 {
     use Helpers\Util;
 
