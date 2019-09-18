@@ -49,7 +49,7 @@ class API implements APIInterface
             $page = isset($params['page']) ? $params['page'] : 1;
             $perPage = isset($params['perPage']) ? $params['perPage'] : 200;
 
-            $moduleInstance = $this->zohoRestClient->getModuleInstance($module);
+            $moduleInstance = $this->restClient->getModuleInstance($module);
             $response = $moduleInstance->getRecords($customViewId, $sortBy, $sortOrder, $page, $perPage);
 
             $records = $response->getData();
@@ -70,15 +70,7 @@ class API implements APIInterface
         }
     }
 
-
-    /**
-     * [searchRecords description]
-     * @param  [type]  $module      [description]
-     * @param  [type]  $mapCriteria [description]
-     * @param  array   $params      [description]
-     * @param  boolean $expanded    [description]
-     * @return [type]               [description]
-     */
+    /*
     public function searchRecords($module, $mapCriteria, $params = [], $expanded = false)
     {
         try {
@@ -135,4 +127,5 @@ class API implements APIInterface
             ];
         }
     }
+    */
 }
