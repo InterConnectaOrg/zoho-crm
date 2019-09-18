@@ -75,14 +75,14 @@ class API
      * @param  array  $params   [description]
      * @return [type]           [description]
      */
-    public function searchRecords($module, $criteria, $params = [])
+    public function searchRecords($module, $word, $params = [])
     {
         try {
             $page = isset($params['page']) ? $params['page'] : 1;
             $perPage = isset($params['perPage']) ? $params['perPage'] : 200;
 
             $moduleInstance = $this->restClient->getModuleInstance($module);
-            $response = $moduleInstance->searchRecordsByCriteria(self::buildCriteria($criteria), $page, $perPage);
+            $response = $moduleInstance->searchRecords($word, $page, $perPage);
 
             $records = $response->getData();
             $info = $response->getInfo();
