@@ -24,7 +24,7 @@
                 "Zoho\\CRM\\ZohoCRMServiceProvider"
             ],
             "aliases": {
-                "ZohoCRM": "Zoho\\CRM\\ZohoCRMFacade"
+                "ZohoCRM": "Zoho\\CRM\\Facades\\ZohoCRM"
             }
         }
     },

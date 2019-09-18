@@ -1,6 +1,6 @@
 <?php
 
-namespace Zoho\CRM;
+namespace Zoho\CRM\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
