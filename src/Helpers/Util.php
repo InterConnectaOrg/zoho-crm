@@ -8,63 +8,17 @@ use zcrmsdk\crm\crud\ZCRMAttachment as Attachment;
 trait Util
 {
     /**
-     * [getAttachmentData description]
-     * @param  Attachment $zcrmAttachment [description]
-     * @return array
+     * [parseRecords description]
+     * @param  array  $records [description]
+     * @return [type]          [description]
      */
-    public static function getAttachment(Attachment $attachment)
-    {
-        $parentRecord = $attachment->getParentRecord();
-        $createdBy = $attachment->getCreatedBy();
-        $modifiedBy = $attachment->getModifiedBy();
-        $owner = $attachment->getOwner();
-
-        return [
-            'id' => $attachment->getId(),
-            'name' => $attachment->getFileName(),
-            'type' => $attachment->getFileType(),
-            'size' => $attachment->getSize(),
-            'parent' => [
-                'module' => $attachment->getParentModule(),
-                'entity_id' => $parentRecord->getEntityId(),
-                'id' => $attachment->getParentId(),
-                'name' => $attachment->getParentName(),
-            ],
-            'created_by' => [
-                'id' => $createdBy->getId(),
-                'name' => $createdBy->getName(),
-            ],
-            'modified_by' => [
-                'id' => $modifiedBy->getId(),
-                'name' => $modifiedBy->getName(),
-            ],
-            'owner' => [
-                'id' => $owner->getId(),
-                'name' => $owner->getName(),
-            ],
-            'created_time' => $attachment->getCreatedTime(),
-            'modified_time' => $attachment->getModifiedTime(),
-        ];
-    }
-
-    /**
-     * [getZcrmRecordData description]
-     * @param  ZCRMRecord $zcrmRecord [description]
-     * @return array
-     */
-    public static function getZcrmRecordData(Record $record)
+    public static function parseRecords(array $records)
     {
         $response = [];
-        $response['id'] = $record->getEntityId();
-        $record = $record->getData();
-        foreach ($record as $key => $value) {
-            if ($value instanceof Record) {
-                $response[$key] = [
-                    'id' => $value->getEntityId(),
-                    'label' => $value->getLookupLabel(),
-                ];
-            } else {
-                $response[$key] = $value;
+
+        foreach ($records as $record) {
+            if ($record instanceof Record) {
+                $response[] = self::parseRecord($record);
             }
         }
 
@@ -72,33 +26,25 @@ trait Util
     }
 
     /**
-     * [getZcrmLineItems description]
-     * @param  [type] $zcrmLineItems [description]
-     * @return [type]                [description]
+     * [parseRecord description]
+     * @param  Record $record [description]
+     * @return [type]         [description]
      */
-    public static function getLineItems($lineItems)
+    public static function parseRecord(Record $record)
     {
         $response = [];
-        foreach ($lineItems as $index => $lineItem) {
-            $response[$index] = [
-                'List_Price' => $lineItem->getListPrice(),
-                'Quantity' => $lineItem->getQuantity(),
-                'Description' => $lineItem->getDescription(),
-                'Total' => $lineItem->getTotal(),
-                'Discount' => $lineItem->getDiscount(),
-                'Discount_Percentage' => $lineItem->getDiscountPercentage(),
-                'Total_After_Discount' => $lineItem->getTotalAfterDiscount(),
-                'Tax_Amount' => $lineItem->getTaxAmount(),
-                'Net_Total' => $lineItem->getNetTotal(),
-                'Line_Tax' => $lineItem->getLineTax(),
-            ];
 
-            if ($lineItem->getProduct() instanceof Record) {
-                $product = $lineItem->getProduct();
-                $response[$index]['Product'] = array_merge($product->getData(), [
-                    'id' => $product->getEntityId(),
-                    'name' => $product->getLookupLabel(),
-                ]);
+        $response['id'] = $record->getEntityId();
+        $fields = $record->getData();
+
+        foreach ($fields as $name => $value) {
+            if ($value instanceof Record) {
+                $response[$name] = [
+                    'id' => $value->getEntityId(),
+                    'label' => $value->getLookupLabel(),
+                ];
+            } else {
+                $response[$name] = $value;
             }
         }
 
