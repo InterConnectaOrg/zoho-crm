@@ -56,7 +56,7 @@ class API
             $parsedRecords = self::parseRecords($records);
 
             return [
-                'records' => $response
+                'records' => $parsedRecords
             ];
         } catch (ZCRMException $e) {
             return [
