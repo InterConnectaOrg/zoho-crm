@@ -58,7 +58,11 @@ trait Util
      */
     public static function buildCriteria($criteria)
     {
-        return "({$criteria['field']}:{$criteria['operator']}:{$criteria['value']})";
+        $field = $criteria['field'];
+        $operator = $criteria['operator'];
+        $value = $criteria['value'];
+
+        return "({$field}:{$operator}:{$value})";
     }
 
     /**
