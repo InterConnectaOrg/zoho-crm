@@ -88,7 +88,7 @@ class API
                 }
                 array_push($zcrmRecords, $zcrmRecord);
             }
-            $moduleInstance = $this->restClient->getRecordInstance($module);
+            $moduleInstance = $this->restClient->getModuleInstance($module);
             $bulkApiResponse = $moduleInstance->updateRecords($zcrmRecords);
             $entityResponses = $bulkApiResponse->getEntityResponses();
             foreach ($entityResponses as $entityResponse) {
