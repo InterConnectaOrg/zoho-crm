@@ -62,6 +62,46 @@ class API
                     'code' => $e->getCode(),
                     'message' => $e->getMessage(),
                     'exception_code' => $e->getExceptionCode(),
+                    'details' => $e->getExceptionDetails(),
+                ],
+                'records' => []
+            ];
+        }
+    }
+
+    /**
+     * Update Records in specific Module
+     *
+     * @param String    $module         Module Name
+     * @param String    $records        Array of records to be updated
+     * @return Array    $response
+     */
+    public function updateRecords($module, $records = [])
+    {
+        try {
+            $response = [];
+            $zcrmRecords = [];
+            foreach ($records as $record) {
+                $zcrmRecord = Record::getInstance($module, null);
+                foreach ($record as $key => $value) {
+                    $zcrmRecord->setFieldValue($key, $value);
+                }
+                array_push($zcrmRecords, $zcrmRecord);
+            }
+            $moduleInstance = $this->restClient->getRecordInstance($module);
+            $bulkApiResponse = $moduleInstance->updateRecords($zcrmRecords);
+            $entityResponses = $bulkApiResponse->getEntityResponses();
+            foreach ($entityResponses as $entityResponse) {
+                array_push($response, $entityResponse->getResponseJSON());
+            }
+            return $response;
+        } catch (ZCRMException $e) {
+            return [
+                'info' =>[
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'exception_code' => $e->getExceptionCode(),
+                    'details' => $e->getExceptionDetails(),
                 ],
                 'records' => []
             ];

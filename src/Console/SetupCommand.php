@@ -48,7 +48,6 @@ class SetupCommand extends Command
             $this->comment('The Grant Token is required.');
             return;
         }
-
         try {
             ZCRMRestClient::initialize($this->getAllCredentials());
 

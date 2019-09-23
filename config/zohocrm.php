@@ -77,7 +77,7 @@ return [
     |
     */
 
-    'accounts_url' =>  env('ZOHOCRM_ACCOUNTS_URL', 'https://accounts.zoho.com/'),
+    'accounts_url' =>  env('ZOHOCRM_ACCOUNTS_URL', 'https://accounts.zoho.com'),
 
     /*
     |--------------------------------------------------------------------------
