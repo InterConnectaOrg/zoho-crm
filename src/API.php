@@ -79,7 +79,7 @@ class API
     public function updateRecords($module, $records = [])
     {
         try {
-            $response = [];
+            $responseRecords = [];
             $zcrmRecords = [];
             foreach ($records as $record) {
                 $zcrmRecord = Record::getInstance($module, null);
@@ -92,18 +92,45 @@ class API
             $bulkApiResponse = $moduleInstance->updateRecords($zcrmRecords);
             $entityResponses = $bulkApiResponse->getEntityResponses();
             foreach ($entityResponses as $entityResponse) {
-                array_push($response, $entityResponse->getResponseJSON());
+                array_push($responseRecords, $entityResponse->getResponseJSON());
             }
-            return $response;
+            return $responseRecords;
         } catch (ZCRMException $e) {
             return [
-                'info' =>[
-                    'code' => $e->getCode(),
-                    'message' => $e->getMessage(),
-                    'exception_code' => $e->getExceptionCode(),
-                    'details' => $e->getExceptionDetails(),
-                ],
-                'records' => []
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Delete Records by Ids
+     *
+     * @param String    $module         Module Name
+     * @param Array     $ids            Array of record ids will be deleted
+     * @return Array    $response
+     */
+    public function deleteRecords($module, $ids)
+    {
+        try {
+            $responseRecords = [];
+            $moduleInstance = $this->restClient->getModuleInstance($module);
+            $bulkApiResponse = $moduleInstance->deleteRecords($ids);
+            $entityResponses = $bulkApiResponse->getEntityResponses();
+            foreach ($entityResponses as $entityResponse) {
+                array_push($responseRecords, $entityResponse->getResponseJSON());
+            }
+            return $responseRecords;
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
             ];
         }
     }
@@ -147,6 +174,49 @@ class API
                     'exception_code' => $e->getExceptionCode(),
                 ],
                 'records' => []
+            ];
+        }
+    }
+
+    /**
+     * Get records related to a specific record
+     * E.g (Accounts has multiple Contacts)
+     *
+     * @param String    $parentModule       Name of parent module
+     * @param String    $parentId           Id of parent record
+     * @param String    $childModule        Name of related module
+     * @return Array    $response           Response in Array format
+     */
+    public function getRelatedRecords($parentModule, $parentId, $childModule)
+    {
+        try {
+            $zcrmRecords = [];
+            $recordsResponse = [];
+            $moduleInstance = $this->restClient->getModuleInstance($parentModule, $parentId);
+            $bulkResponse = $moduleInstance->getRelatedListRecords($childModule);
+            $zcrmRecords = $bulkResponse->getData();
+            $zcrmRequestInfo = $bulkResponse->getInfo();
+
+            foreach ($zcrmRecords as $idx => $zcrmRecord) {
+                $recordsResponse[$idx] = self::parseRecord($zcrmRecord);
+            }
+            $infoResponse = [
+                'more_records' => $zcrmRequestInfo->getMoreRecords(),
+                'count' => $zcrmRequestInfo->getRecordCount(),
+                'page' => $zcrmRequestInfo->getPageNo(),
+                'per_page' => $zcrmRequestInfo->getPerPage(),
+            ];
+            return [
+                'records' => $recordsResponse,
+                'info' => $infoResponse,
+            ];
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
             ];
         }
     }
