@@ -220,4 +220,34 @@ class API
             ];
         }
     }
+
+    /**
+     * Get Record By Id
+     *
+     * @param String    $module         Module Name
+     * @param String    $id             Id of record will be returned
+     * @return Json
+     */
+    public function getRecordById($module, $id)
+    {
+        try {
+            $recordResponse = [];
+            $apiResponse = $this->restClient->getModuleInstance($module)->getRecord($id);// APIResponse Instance
+            $zcrmRecord = $apiResponse->getData();// ZCRMRecord Instance
+            $recordResponse = self::parseRecord($zcrmRecord);
+            if ($zcrmRecord->getLineItems()) {
+                $recordResponse['Product_Details'] = self::getLineItems($zcrmRecord->getLineItems());
+            }
+            $recordResponse['id'] = $id;
+            return $recordResponse;
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
 }
