@@ -2,7 +2,6 @@
 
 * Get yourself a [Zoho CRM account](https://www.zoho.com/crm/).
 * [Register your application](https://www.zoho.com/crm/developer/docs/php-sdk/clientapp.html)
-* Generate
 * PHP >= 7.2
 * Laravel >= 5.8
 
@@ -68,4 +67,7 @@ You can find the latest development roadmap for this package [here](docs/roadmap
 
 ## Support
 
-Contact: [interconnecta.com](https://interconnecta.com) -- it@interconnecta.com -- +1-646-760-4090, ext. 205
+Contact:<br>
+[interconnecta.com](https://interconnecta.com)<br>
+it@interconnecta.com<br>
++1-646-760-4090, ext. 205
