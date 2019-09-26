@@ -186,15 +186,22 @@ class API
      * @param String    $parentModule       Name of parent module
      * @param String    $parentId           Id of parent record
      * @param String    $childModule        Name of related module
+     * @param Array     $params             Additional parameters
+     *                                      Available keys: sortByField, sortOrder, page, perPage
      * @return Array    $response           Response in Array format
      */
-    public function getRelatedRecords($parentModule, $parentId, $childModule)
+    public function getRelatedRecords($parentModule, $parentId, $childModule, $params = [])
     {
         try {
             $zcrmRecords = [];
             $recordsResponse = [];
-            $moduleInstance = $this->restClient->getModuleInstance($parentModule, $parentId);
-            $bulkResponse = $moduleInstance->getRelatedListRecords($childModule);
+            $sortByField = $params['sortByField'] ?? null;
+            $sortOrder = $params['sortOrder'] ?? null;
+            $page = $params['page'] ?? 1;
+            $perPage = $params['perPage'] ?? 200;
+
+            $moduleInstance = $this->restClient->getRecordInstance($parentModule, $parentId);
+            $bulkResponse = $moduleInstance->getRelatedListRecords($childModule, $sortByField, $sortOrder, $page, $perPage);
             $zcrmRecords = $bulkResponse->getData();
             $zcrmRequestInfo = $bulkResponse->getInfo();
 

@@ -58,6 +58,16 @@ interface APIInterface
     function deleteRecords($module, $records);
 
     /**
+     * Get Related Records
+     * @param  String   $parentModule
+     * @param  String   $parentId
+     * @param  String   $childModule
+     * @param  Array    $params
+     */
+    function getRelatedRecords($parentModule, $parentId, $childModule, $params);
+
+
+    /**
      * [searchRecords description]
      * @param  [type] $module      [description]
      * @param  [type] $mapCriteria [description]
