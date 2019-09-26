@@ -31,7 +31,7 @@ interface APIInterface
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    function createRecords($module, $records);
+    function createRecords($module, $records, $params);
 
     /**
      * [updateRecords description]
@@ -39,7 +39,7 @@ interface APIInterface
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    function updateRecords($module, $records);
+    function updateRecords($module, $records, $params);
 
     /**
      * [upsertRecords description]

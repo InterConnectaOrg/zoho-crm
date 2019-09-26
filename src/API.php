@@ -73,10 +73,11 @@ class API
      * Update Records in specific Module
      *
      * @param String    $module         Module Name
-     * @param String    $records        Array of records to be updated
+     * @param Array     $records        Array of records to be updated
+     * @param Array     $params         Array of parameters. Trigger ['workflow', 'approval', 'blueprint']
      * @return Array    $response
      */
-    public function updateRecords($module, $records = [])
+    public function updateRecords($module, $records = [], $params = [])
     {
         try {
             $responseRecords = [];
@@ -89,7 +90,7 @@ class API
                 array_push($zcrmRecords, $zcrmRecord);
             }
             $moduleInstance = $this->restClient->getModuleInstance($module);
-            $bulkApiResponse = $moduleInstance->updateRecords($zcrmRecords);
+            $bulkApiResponse = $moduleInstance->updateRecords($zcrmRecords, $params);
             $entityResponses = $bulkApiResponse->getEntityResponses();
             foreach ($entityResponses as $entityResponse) {
                 array_push($responseRecords, $entityResponse->getResponseJSON());
