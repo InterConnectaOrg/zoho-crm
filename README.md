@@ -7,7 +7,7 @@
 
 ## Installation
 
-Add Laravel-Mollie to your composer file via the `composer require` command:
+Add Zoho CRM to your composer file via the `composer require` command:
 
 ```bash
 $ composer require interconnecta/zoho-crm
@@ -17,7 +17,7 @@ Or add it to `composer.json` manually:
 
 ```json
 "require": {
-    "interconnecta/zoho-crm": "dev-develop"
+    "interconnecta/zoho-crm": "0.1.*"
 }
 ```
 
