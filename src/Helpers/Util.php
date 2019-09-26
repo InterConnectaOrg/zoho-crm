@@ -4,6 +4,8 @@ namespace Zoho\CRM\Helpers;
 
 use zcrmsdk\crm\crud\ZCRMRecord as Record;
 use zcrmsdk\crm\crud\ZCRMAttachment as Attachment;
+use zcrmsdk\crm\crud\ZCRMInventoryLineItem as LineItem;
+
 
 trait Util
 {
@@ -52,6 +54,38 @@ trait Util
     }
 
     /**
+     * Get Quotes, Invoices, SalesOrder Line Items
+     */
+    public static function getLineItems($lineItems)
+    {
+        $response = [];
+        foreach ($lineItems as $index => $lineItem) {
+            if ($lineItem instanceof LineItem) {
+                $response[$index] = [
+                    'List_Price' => $lineItem->getListPrice(),
+                    'Quantity' => $lineItem->getQuantity(),
+                    'Description' => $lineItem->getDescription(),
+                    'Total' => $lineItem->getTotal(),
+                    'Discount' => $lineItem->getDiscount(),
+                    'Discount_Percentage' => $lineItem->getDiscountPercentage(),
+                    'Total_After_Discount' => $lineItem->getTotalAfterDiscount(),
+                    'Tax_Amount' => $lineItem->getTaxAmount(),
+                    'Net_Total' => $lineItem->getNetTotal(),
+                    'Line_Tax' => $lineItem->getLineTax(),
+                ];
+                if ($lineItem->getProduct() instanceof Record) {
+                    $product = $lineItem->getProduct();
+                    $response[$index]['Product'] = array_merge($product->getData(), [
+                        'id' => $product->getEntityId(),
+                        'name' => $product->getLookupLabel(),
+                    ]);
+                }
+            }
+        }
+        return $response;
+    }
+
+    /**
      * [getCriteria description]
      * @param  [type] $criteriaPatternMap [description]
      * @return [type]                     [description]
@@ -67,7 +101,7 @@ trait Util
 
     /**
      * [isMultidimensionalArray description]
-     * @param  [type]  $array [description]
+     * @param  Array             $array [description]
      * @return boolean        [description]
      */
     public static function isMultidimensionalArray($array)
