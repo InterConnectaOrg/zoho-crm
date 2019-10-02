@@ -34,10 +34,10 @@ class ZohoCRMServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/Storage/oauth' => storage_path('app/zoho/crm/oauth'),
-            ], 'zohocrm-oauth');
+            ], 'zoho-crm-oauth');
             $this->publishes([
-                __DIR__.'/../config/zohocrm.php' => config_path('zohocrm.php'),
-            ], 'zohocrm-config');
+                __DIR__.'/../config/zoho-crm.php' => config_path('zoho-crm.php'),
+            ], 'zoho-crm-config');
         }
     }
 
@@ -49,7 +49,7 @@ class ZohoCRMServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/zohocrm.php', 'zohocrm'
+            __DIR__.'/../config/zoho-crm.php', 'zoho-crm'
         );
 
         $this->commands([
