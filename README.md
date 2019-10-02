@@ -25,20 +25,20 @@ Zoho CRM's service providers will be automatically registered using Laravel's au
 
 ## Configuration
 
-The defaults configuration settings are set in `config/zohocrm.php`. Copy this file to your own config directory to modify the values. You can publish the config using this command:
+The defaults configuration settings are set in `config/zoho-crm.php`. Copy this file to your own config directory to modify the values. You can publish the config using this command:
 
 ```bash
-$ php artisan zohocrm:install
+$ php artisan zoho-crm:install
 ```
 
 You'll need to add the following variables to your .env file. Use the credentials previously obtained registering your application.
 
 ```php
-ZOHOCRM_CLIENT_ID=
-ZOHOCRM_CLIENT_SECRET=
-ZOHOCRM_REDIRECT_URI=
-ZOHOCRM_CURRENT_USER_EMAIL=
-ZOHOCRM_SANDBOX=
+ZOHO_CRM_CLIENT_ID=
+ZOHO_CRM_CLIENT_SECRET=
+ZOHO_CRM_REDIRECT_URI=
+ZOHO_CRM_CURRENT_USER_EMAIL=
+ZOHO_CRM_SANDBOX=
 ```
 
 Then, follow the next steps:
@@ -50,7 +50,7 @@ Then, follow the next steps:
 Finally, run the following command:
 
 ```bash
-$ php artisan zohocrm:setup
+$ php artisan zoho-crm:setup
 ```
 
 Enter the previously generated code.
