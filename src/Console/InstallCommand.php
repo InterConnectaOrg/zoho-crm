@@ -11,7 +11,7 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'zohocrm:install';
+    protected $signature = 'zoho-crm:install';
 
     /**
      * The console command description.
@@ -37,10 +37,10 @@ class InstallCommand extends Command
     public function handle()
     {
         $this->comment('Publishing Zoho CRM OAuth files ...');
-        $this->callSilent('vendor:publish', ['--tag' => 'zohocrm-oauth']);
+        $this->callSilent('vendor:publish', ['--tag' => 'zoho-crm-oauth']);
 
         $this->comment('Publishing Zoho CRM Configuration ...');
-        $this->callSilent('vendor:publish', ['--tag' => 'zohocrm-config']);
+        $this->callSilent('vendor:publish', ['--tag' => 'zoho-crm-config']);
 
         $this->info('Zoho CRM scaffolding installed successfully.');
     }

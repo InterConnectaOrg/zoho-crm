@@ -31,7 +31,7 @@ interface APIInterface
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    function createRecords($module, $records);
+    function createRecords($module, $records, $params);
 
     /**
      * [updateRecords description]
@@ -39,7 +39,7 @@ interface APIInterface
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    function updateRecords($module, $records);
+    function updateRecords($module, $records, $params);
 
     /**
      * [upsertRecords description]
@@ -56,6 +56,16 @@ interface APIInterface
      * @return [type]          [description]
      */
     function deleteRecords($module, $records);
+
+    /**
+     * Get Related Records
+     * @param  String   $parentModule
+     * @param  String   $parentId
+     * @param  String   $childModule
+     * @param  Array    $params
+     */
+    function getRelatedRecords($parentModule, $parentId, $childModule, $params);
+
 
     /**
      * [searchRecords description]
