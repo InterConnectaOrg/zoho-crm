@@ -1,4 +1,4 @@
-# Zoho CRM Roadmap
+# Roadmap
 
 This roadmap lists all current and upcoming activity for the Zoho CRM package.
 
