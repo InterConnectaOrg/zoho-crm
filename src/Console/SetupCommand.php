@@ -18,7 +18,7 @@ class SetupCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'zohocrm:setup';
+    protected $signature = 'zoho-crm:setup';
 
     /**
      * The console command description.
