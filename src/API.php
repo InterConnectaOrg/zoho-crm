@@ -230,6 +230,38 @@ class API
     }
 
     /**
+     * Upload attachment associated to specific parent record
+     *
+     * @param String $module    Parent Module Name
+     * @param String $recordId  Record ID to upload and associate attachment
+     * @param String $filePath  Absolute file path will be uploaded.
+     * @return Array
+     */
+    public function uploadAttachment($module, $recordId, $filePath)
+    {
+        try {
+            $recordInstance = $this->restClient->getRecordInstance($module, $recordId);
+            $uploadedAttachment = $recordInstance->uploadAttachment($filePath);
+            $response = [
+                'http_code' => $uploadedAttachment->getHttpStatusCode(),
+                'status' => $uploadedAttachment->getStatus(),
+                'message' => $uploadedAttachment->getMessage(),
+                'code' => $uploadedAttachment->getCode(),
+                'details' => $uploadedAttachment->getDetails(),
+            ];
+            return $response;
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
      * Get Record By Id
      *
      * @param String    $module         Module Name
