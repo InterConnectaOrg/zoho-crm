@@ -44,7 +44,12 @@ ZOHO_CRM_SANDBOX=
 Then, follow the next steps:
 1. Go to [Zoho CRM Developer Console](https://accounts.zoho.com/developerconsole).
 2. Under the Client previously registered, click the vertical three points then `Self Client`.
-3. Enter `aaaserver.profile.READ,ZohoCRM.modules.ALL,ZohoCRM.settings.ALL`, then click `View Code`.
+3. Enter the default scope , then click `View Code`
+```
+aaaserver.profile.READ,ZohoCRM.modules.ALL,ZohoCRM.settings.ALL
+```    
+> If you want to apply a different scope, see the [link](https://www.zoho.com/crm//developer/docs/api/oauth-overview.html#scopes)
+
 4. Copy the generated code.
 
 Finally, run the following command:

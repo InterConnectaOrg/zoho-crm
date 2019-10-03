@@ -1,3 +1,11 @@
+## [0.3.0 - (2019-10-03)](https://github.com/InterConnecta/zoho-crm/compare/0.2.0...0.3.0)
+
+### Added
+- Add `uploadAttachment` method. ([895c5aa](https://github.com/InterConnecta/zoho-crm/commit/895c5aa))
+### Changed
+- Update README. ([5c0fecd](https://github.com/InterConnecta/zoho-crm/commit/5c0fecd))
+
+
 ## [0.2.0 - (2019-10-02)](https://github.com/InterConnecta/zoho-crm/compare/0.1.1...0.2.0)
 
 ### Added
