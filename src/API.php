@@ -290,4 +290,42 @@ class API
             ];
         }
     }
+
+    /**
+    * Create Records
+    *
+    * @param String    $module         Module Name
+    * @param Array     $records        Array of records to be updated
+    * @param Array     $params         Array of parameters. Trigger [‘workflow’, ‘approval’, ‘blueprint’]
+    * @return Array    $response
+    */
+   public function createRecords($module, $records = [], $params = [])
+   {
+       try {
+           $responseRecords = [];
+           $zcrmRecords = [];
+           foreach ($records as $record) {
+               $zcrmRecord = Record::getInstance($module, null);
+               foreach ($record as $key => $value) {
+                   $zcrmRecord->setFieldValue($key, $value);
+               }
+               array_push($zcrmRecords, $zcrmRecord);
+           }
+           $moduleInstance = $this->restClient->getModuleInstance($module);
+           $bulkApiResponse = $moduleInstance->createRecords($zcrmRecords, $params);
+           $entityResponses = $bulkApiResponse->getEntityResponses();
+           foreach ($entityResponses as $entityResponse) {
+               array_push($responseRecords, $entityResponse->getResponseJSON());
+           }
+           return $responseRecords;
+       } catch (ZCRMException $e) {
+           return [
+               ‘code’ => $e->getCode(),
+               ‘details’ => $e->getExceptionDetails(),
+               ‘message’ => $e->getMessage(),
+               ‘exception_code’ => $e->getExceptionCode(),
+               ‘status’ => ‘error’,
+           ];
+       }
+   }
 }
