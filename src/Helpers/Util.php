@@ -38,6 +38,9 @@ trait Util
 
         $response['id'] = $record->getEntityId();
         $fields = $record->getData();
+        if ($record->getLineItems()) {
+            $response['Product_Details'] = self::getLineItems($record->getLineItems());
+        }
 
         foreach ($fields as $name => $value) {
             if ($value instanceof Record) {
