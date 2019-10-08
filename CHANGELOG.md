@@ -1,7 +1,14 @@
+## [0.4.1 - (2019-10-08)](https://github.com/InterConnecta/zoho-crm/compare/0.4.0...0.4.1)
+
+### Added
+  - [related-records] Get line items in Related records ([4c6d162](https://github.com/InterConnecta/zoho-crm/commit/4c6d162))
+
+
 ## [0.4.0 - (2019-10-08)](https://github.com/InterConnecta/zoho-crm/compare/0.3.0...0.4.0)
 
 ### Added
   - [create-records] Added createRecords method ([5892bb4](https://github.com/InterConnecta/zoho-crm/commit/5892bb4))
+
 
 ## [0.3.0 - (2019-10-03)](https://github.com/InterConnecta/zoho-crm/compare/0.2.0...0.3.0)
 
