@@ -1,0 +1,38 @@
+{
+    "name": "interconnecta/zoho-crm",
+    "keywords": ["zoho", "crm", "laravel"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gustavo Levano",
+            "email": "gustavo@interconnecta.com"
+        },
+        {
+            "name": "Diter Terrones",
+            "email": "diesther@interconnecta.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "illuminate/console": "^5.8.0|^6.0",
+        "illuminate/support": "^5.8.0|^6.0",
+        "zohocrm/php-sdk": "2.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoho\\CRM\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Zoho\\CRM\\ZohoCRMServiceProvider"
+            ],
+            "aliases": {
+                "ZohoCRM": "Zoho\\CRM\\Facades\\ZohoCRM"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
