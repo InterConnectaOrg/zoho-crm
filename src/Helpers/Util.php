@@ -110,9 +110,50 @@ trait Util
     public static function isMultidimensionalArray($array)
     {
         if (is_array($array)) {
-            $isMultidimensional = array_filter($array,'is_array');
+            $isMultidimensional = array_filter($array, 'is_array');
             return count($isMultidimensional) > 0;
         }
         return false;
+    }
+
+    /**
+     * Get Attachment Data
+     * @param  Attachment    $zcrmAttachment        Attachment Object
+     * @return Array         $response              Response in Array format   
+     */
+    public static function getAttachmentData(Attachment $zcrmAttachment)
+    {
+        $response = [];
+        $parentRecord = $zcrmAttachment->getParentRecord();
+        $createdBy = $zcrmAttachment->getCreatedBy();
+        $modifiedBy = $zcrmAttachment->getModifiedBy();
+        $owner = $zcrmAttachment->getOwner();
+        $response = [
+            'id' => $zcrmAttachment->getId(),
+            'name' => $zcrmAttachment->getFileName(),
+            'type' => $zcrmAttachment->getFileType(),
+            'size' => $zcrmAttachment->getSize(),
+            'parent' => [
+                'module' => $zcrmAttachment->getParentModule(),
+                'entity_id' => $parentRecord->getEntityId(),
+                'id' => $zcrmAttachment->getParentId(),
+                'name' => $zcrmAttachment->getParentName(),
+            ],
+            'created_by' => [
+                'id' => $createdBy->getId(),
+                'name' => $createdBy->getName(),
+            ],
+            'modified_by' => [
+                'id' => $modifiedBy->getId(),
+                'name' => $modifiedBy->getName(),
+            ],
+            'owner' => [
+                'id' => $owner->getId(),
+                'name' => $owner->getName(),
+            ],
+            'created_time' => $zcrmAttachment->getCreatedTime(),
+            'modified_time' => $zcrmAttachment->getModifiedTime(),
+        ];
+        return $response;
     }
 }
