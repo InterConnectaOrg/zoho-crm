@@ -51,20 +51,24 @@ class API
             $response = $moduleInstance->getRecords($customViewId, $sortBy, $sortOrder, $page, $perPage);
 
             $records = $response->getData();
+            $info = $response->getInfo();
             $parsedRecords = self::parseRecords($records);
-
             return [
-                'records' => $parsedRecords
+                'records' => $parsedRecords,
+                'info' => [
+                    'more_records' => $info->getMoreRecords(),
+                    'count' => $info->getRecordCount(),
+                    'page' => $info->getPageNo(),
+                    'per_page' => $info->getPerPage(),
+                ],
             ];
         } catch (ZCRMException $e) {
             return [
-                'info' => [
-                    'code' => $e->getCode(),
-                    'message' => $e->getMessage(),
-                    'exception_code' => $e->getExceptionCode(),
-                    'details' => $e->getExceptionDetails(),
-                ],
-                'records' => []
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
             ];
         }
     }
