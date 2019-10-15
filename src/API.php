@@ -51,20 +51,24 @@ class API
             $response = $moduleInstance->getRecords($customViewId, $sortBy, $sortOrder, $page, $perPage);
 
             $records = $response->getData();
+            $info = $response->getInfo();
             $parsedRecords = self::parseRecords($records);
-
             return [
-                'records' => $parsedRecords
+                'records' => $parsedRecords,
+                'info' => [
+                    'more_records' => $info->getMoreRecords(),
+                    'count' => $info->getRecordCount(),
+                    'page' => $info->getPageNo(),
+                    'per_page' => $info->getPerPage(),
+                ],
             ];
         } catch (ZCRMException $e) {
             return [
-                'info' =>[
-                    'code' => $e->getCode(),
-                    'message' => $e->getMessage(),
-                    'exception_code' => $e->getExceptionCode(),
-                    'details' => $e->getExceptionDetails(),
-                ],
-                'records' => []
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
             ];
         }
     }
@@ -168,7 +172,7 @@ class API
             ];
         } catch (ZCRMException $e) {
             return [
-                'info' =>[
+                'info' => [
                     'count' => 0,
                     'code' => $e->getCode(),
                     'message' => $e->getMessage(),
@@ -272,8 +276,8 @@ class API
     {
         try {
             $recordResponse = [];
-            $apiResponse = $this->restClient->getModuleInstance($module)->getRecord($id);// APIResponse Instance
-            $zcrmRecord = $apiResponse->getData();// ZCRMRecord Instance
+            $apiResponse = $this->restClient->getModuleInstance($module)->getRecord($id); // APIResponse Instance
+            $zcrmRecord = $apiResponse->getData(); // ZCRMRecord Instance
             $recordResponse = self::parseRecord($zcrmRecord);
             if ($zcrmRecord->getLineItems()) {
                 $recordResponse['Product_Details'] = self::getLineItems($zcrmRecord->getLineItems());
@@ -286,6 +290,140 @@ class API
                 'details' => $e->getExceptionDetails(),
                 'message' => $e->getMessage(),
                 'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Create Records
+     *
+     * @param String    $module         Module Name
+     * @param Array     $records        Array of records to be updated
+     * @param Array     $params         Array of parameters. Trigger [‘workflow’, ‘approval’, ‘blueprint’]
+     * @return Array    $response
+     */
+    public function createRecords($module, $records = [], $params = [])
+    {
+        try {
+            $responseRecords = [];
+            $zcrmRecords = [];
+            foreach ($records as $record) {
+                $zcrmRecord = Record::getInstance($module, null);
+                foreach ($record as $key => $value) {
+                    $zcrmRecord->setFieldValue($key, $value);
+                }
+                array_push($zcrmRecords, $zcrmRecord);
+            }
+            $moduleInstance = $this->restClient->getModuleInstance($module);
+            $bulkApiResponse = $moduleInstance->createRecords($zcrmRecords, $params);
+            $entityResponses = $bulkApiResponse->getEntityResponses();
+            foreach ($entityResponses as $entityResponse) {
+                array_push($responseRecords, $entityResponse->getResponseJSON());
+            }
+            return $responseRecords;
+        } catch (ZCRMException $e) {
+            return [
+                ‘code’ => $e->getCode(),
+                ‘details’ => $e->getExceptionDetails(),
+                ‘message’ => $e->getMessage(),
+                ‘exception_code’ => $e->getExceptionCode(),
+                ‘status’ => ‘error’,
+            ];
+        }
+    }
+
+    /**
+     * Get Attachments
+     *
+     * @param String    $module         Module Name
+     * @param Array     $id             Id of the record to fetch Attachments
+     * @param Array     $params         Additional parameters
+     *                                  Available keys: page, perPage
+     * @return Array    $response       Response in Array format
+     */
+    public function getAttachments($module, $id, $params)
+    {
+        try {
+            $page = $params['page'] ?? 1;
+            $perPage = $params['perPage'] ?? 200;
+            //
+            $recordsResponse = [];
+            $infoResponse = [];
+            //
+            $recordInstance = $this->restClient->getRecordInstance($module, $id);
+            $bulkApiResponse = $recordInstance->getAttachments($page, $perPage);
+            //
+            if ($bulkApiResponse->getData()) {
+                $zcrmAttachments = $bulkApiResponse->getData();
+                $zcrmRequestInfo = $bulkApiResponse->getInfo();
+                foreach ($zcrmAttachments as $index => $zcrmAttachment) {
+                    $recordsResponse[$index] = self::getAttachmentData($zcrmAttachment);
+                }
+                $infoResponse = [
+                    'more_records' => $zcrmRequestInfo->getMoreRecords(),
+                    'count' => $zcrmRequestInfo->getRecordCount(),
+                    'page' => $zcrmRequestInfo->getPageNo(),
+                    'per_page' => $zcrmRequestInfo->getPerPage(),
+                ];
+                return [
+                    'records' => $recordsResponse,
+                    'info' => $infoResponse,
+                ];
+            }
+            return [
+                'records' => [],
+                'info' => [
+                    'more_records' => false,
+                    'count' => 0,
+                ]
+            ];
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Get Modules
+     *
+     * @return Array    $response       Response in Array format
+     */
+    public function getModules()
+    {
+
+        $modulesResponse = [];
+        $notAvailableModules = ['Visits', 'Actions_Performed'];
+
+        try {
+            $modules = $this->restClient->getAllModules()->getData();
+
+            foreach ($modules as $module) {
+                if ($module->isApiSupported() && !in_array($module->getAPIName(), $notAvailableModules)) {
+                    array_push($modulesResponse, [
+                        'id' => $module->getId(),
+                        'api_name' => $module->getAPIName(),
+                        'module_name' => $module->getModuleName(),
+                        'singular_label' => $module->getSingularLabel(),
+                        'plural_label' => $module->getPluralLabel(),
+                        'fields' => $module->getFields()
+                    ]);
+                }
+            }
+            return [
+                'records' => $modulesResponse
+            ];
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
                 'status' => 'error',
             ];
         }

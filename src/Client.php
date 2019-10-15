@@ -127,9 +127,9 @@ class Client
      * @param  [type] $relatedModule [description]
      * @return [type]                [description]
      */
-    public function getRelatedRecords($module, $id, $relatedModule)
+    public function getRelatedRecords($module, $id, $relatedModule, $params)
     {
-        return $this->client->getRelatedRecords($module, $id, $relatedModule);
+        return $this->client->getRelatedRecords($module, $id, $relatedModule, $params);
     }
 
     /**
