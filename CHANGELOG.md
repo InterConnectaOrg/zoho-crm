@@ -1,3 +1,11 @@
+## [0.5.0 - (2019-10-14)](https://github.com/InterConnecta/zoho-crm/compare/0.4.1...0.5.0)
+
+### Added
+  - [get-modules] Added getModules method ([6c86de0](https://github.com/InterConnecta/zoho-crm/commit/6c86de0))
+  - getRecords ([34e9760](https://github.com/InterConnecta/zoho-crm/commit/34e9760))
+  - [get-attachments] Added getAttachments method ([3634133](https://github.com/InterConnecta/zoho-crm/commit/3634133))
+  - [get-attachments] Added getAttachmentData util function ([34c3e61](https://github.com/InterConnecta/zoho-crm/commit/34c3e61))
+
 ## [0.4.1 - (2019-10-08)](https://github.com/InterConnecta/zoho-crm/compare/0.4.0...0.4.1)
 
 ### Added
