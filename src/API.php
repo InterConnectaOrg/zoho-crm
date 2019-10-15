@@ -334,7 +334,7 @@ class API
     }
 
     /**
-     * Create Records
+     * Get Attachments
      *
      * @param String    $module         Module Name
      * @param Array     $id             Id of the record to fetch Attachments
@@ -377,6 +377,46 @@ class API
                     'more_records' => false,
                     'count' => 0,
                 ]
+            ];
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Get Modules
+     *
+     * @return Array    $response       Response in Array format
+     */
+    public function getModules()
+    {
+
+        $modulesResponse = [];
+        $notAvailableModules = ['Visits', 'Actions_Performed'];
+
+        try {
+            $modules = $this->restClient->getAllModules()->getData();
+
+            foreach ($modules as $module) {
+                if ($module->isApiSupported() && !in_array($module->getAPIName(), $notAvailableModules)) {
+                    array_push($modulesResponse, [
+                        'id' => $module->getId(),
+                        'api_name' => $module->getAPIName(),
+                        'module_name' => $module->getModuleName(),
+                        'singular_label' => $module->getSingularLabel(),
+                        'plural_label' => $module->getPluralLabel(),
+                        'fields' => $module->getFields()
+                    ]);
+                }
+            }
+            return [
+                'records' => $modulesResponse
             ];
         } catch (ZCRMException $e) {
             return [
