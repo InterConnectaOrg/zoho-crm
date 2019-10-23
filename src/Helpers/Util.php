@@ -156,4 +156,100 @@ trait Util
         ];
         return $response;
     }
+
+    /**
+     * Get Profiles Data
+     * @param  zcrmProfile    $zcrmProfile       
+     * @return Array         $response              Response in Array format   
+     */
+    public static function getProfilesData(Profile $zcrmProfile)
+    {
+        $response = [];
+        $permissionsResponse = [];
+        $sectionResponse = [];
+        $modifiedBy = $zcrmProfile->getModifiedBy() == null 
+                                    ? null
+                                    :['id' => $zcrmProfile->getModifiedBy()->getId(),'name'=>$zcrmProfile->getModifiedBy()->getName()];
+        $createdBy = $zcrmProfile->getCreatedBy() == null 
+                                    ? null
+                                    :['id' => $zcrmProfile->getCreatedBy()->getId(),'name'=>$zcrmProfile->getCreatedBy()->getName()];
+        $permissionsList = $zcrmProfile->getPermissionList();
+
+        foreach ($permissionsList as $index => $permission) {
+            $permissionsResponse[$index] = self::getPermissionList($permission);
+        }
+
+        $sectionsList = $zcrmProfile->getSectionsList();
+        foreach ($sectionsList as $index => $section) {
+            $sectionResponse[$index] = self::getSectionsList($section);
+
+        }
+
+        $response = [
+            'id' => $zcrmProfile->getId(),
+            'name' => $zcrmProfile->getName(),
+            'default' => $zcrmProfile->isDefaultProfile(),
+            'created_time' => $zcrmProfile->getCreatedTime(),
+            'modified_time' => $zcrmProfile->getModifiedTime(),
+            'modified_by' => $modifiedBy,
+            'description' => $zcrmProfile->getDescription(),
+            'created_by' => $createdBy,
+            'category' => $zcrmProfile->getCategory(),
+            'permissions_list' => $permissionsResponse,
+            'sections_list' => $sectionResponse,
+        ];
+        return $response;
+    }
+
+     /**
+     * Get Permission List
+     * @param  permissionsList    $permissionsList       
+     * @return Array         $response              Response in Array format   
+     */
+
+    public static function getPermissionList(Permission $permissionsList){
+
+        $response = [
+            'display_label'=> $permissionsList->getDisplayLabel(),
+            'module' => $permissionsList->getModule(),
+            'id' => $permissionsList->getId(),
+            'name' => $permissionsList->getName(),
+            'enabled' => $permissionsList->isEnabled()
+
+        ];
+        return $response;
+    }
+
+     /**
+     * Get Sections List
+     * @param  profileSection    $profileSection       
+     * @return Array         $response              Response in Array format   
+     */
+    public static function getSectionsList(ProfileSection $profileSection){
+        $profileCategories = [];
+        $profileCategory = $profileSection->getCategories();
+        foreach($profileCategory as $index => $category){
+            $profileCategories[$index] = self::getProfileCategory($category);
+        }
+        $response = [
+            'name' => $profileSection->getName(),
+            'categories' => $profileCategories
+        ];
+        return $response;
+    }
+
+      /**
+     * Get Profile Category
+     * @param  profileCategory    $profileCategory       
+     * @return Array            $response              Response in Array format   
+     */
+    public static function getProfileCategory(ProfileCategory $profileCategory){
+        $response = [
+            'name' => $profileCategory->getName(),
+            'module' => $profileCategory->getModule(),
+            'display_label' => $profileCategory->getDisplayLabel(),
+            'permission_ids' => $profileCategory->getPermissionIds()
+        ];
+        return $response;
+    }
 }

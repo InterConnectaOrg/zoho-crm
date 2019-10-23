@@ -224,4 +224,15 @@ class Client
     {
         return $this->client->deleteAttachment($module, $recordId, $attachmentId);
     }
+    
+    /**
+     * [getAllProfiles description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId     [description]
+     * @return [type]               [description]
+     */
+    public function getAllProfiles($orgName,$orgId){
+
+        return $this->client->getAllProfiles($orgName,$orgId);
+    }
 }
