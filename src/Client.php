@@ -235,4 +235,16 @@ class Client
 
         return $this->client->getAllProfiles($orgName,$orgId);
     }
+
+     /**
+     * [getAllProfiles description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId        [description]
+     * @param String $profileId     [descriptio]
+     * @return [type]               [description]
+     */
+    public function getProfileById($orgName,$orgId,$profileId){
+
+        return $this->client->getProfileById($orgName,$orgId,$profileId);
+    }
 }

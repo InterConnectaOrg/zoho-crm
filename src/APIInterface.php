@@ -143,4 +143,13 @@ interface APIInterface
      * @return [type]               [description]
      */
     function getAllProfiles($orgName,$orgId);
+
+     /**
+     * [getProfileById description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId           [description]
+     * @param String $profileId     [description]
+     * @return [type]               [description]
+     */
+    function getProfileById($orgName,$orgId,$profileId);
 }

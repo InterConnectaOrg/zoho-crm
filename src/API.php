@@ -429,17 +429,17 @@ class API
         }
     }
 
-     /**
+    /**
      * Get All Profiles
      *
      * @param String    $orgName         Organization Name
-     * @param Array     $orgId            Organization ID
+     * @param String     $orgId            Organization ID
      * @return Array    $response       Response in Array format
      */
 
     public function getAllProfiles($orgName, $orgId)
     {
-        try{
+        try {
             $apiResponse = [];
             //
             $recordInstance = $this->restClient->getOrganizationInstance($orgName, $orgId);
@@ -450,12 +450,12 @@ class API
                 foreach ($zcrmProfiles as $index => $zcrmProfile) {
                     $apiResponse[$index] = self::getProfilesData($zcrmProfile);
                 }
-    
+
                 return [
                     'profiles' => $apiResponse,
                 ];
             }
-        }catch(ZCRMException $e){
+        } catch (ZCRMException $e) {
             return [
                 'http_code' => $e->getCode(),
                 'details' => $e->getExceptionDetails(),
@@ -464,6 +464,35 @@ class API
                 'status' => 'error',
             ];
         }
-       
+    }
+
+     /**
+     * Get Profile By Id
+     *
+     * @param String    $orgName         Organization Name
+     * @param String     $orgId          Organization ID
+     * @param String     $profileId      Profile ID   
+     * @return Array    $response        Response in Array format
+     */
+    public function getProfileById($orgName, $orgId, $profileId)
+    {
+
+        try {
+            $recordResponse = [];
+            $apiResponse = $this->restClient->getOrganizationInstance($orgName, $orgId)->getProfile($profileId); // APIResponse Instance
+            $zcrmRecord = $apiResponse->getData(); // ZCRMRecord Instance
+            $recordResponse = self::getProfilesData($zcrmRecord);
+            return [
+                'profile_by_id' => $recordResponse
+            ];
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
     }
 }
