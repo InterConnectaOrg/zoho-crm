@@ -135,4 +135,12 @@ interface APIInterface
      * @return [type]               [description]
      */
     function deleteAttachment($module, $id, $attachmentId);
+
+     /**
+     * [getAllProfiles description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId           [description]
+     * @return [type]               [description]
+     */
+    function getAllProfiles($orgName,$orgId);
 }

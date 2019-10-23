@@ -428,4 +428,42 @@ class API
             ];
         }
     }
+
+     /**
+     * Get All Profiles
+     *
+     * @param String    $orgName         Organization Name
+     * @param Array     $orgId            Organization ID
+     * @return Array    $response       Response in Array format
+     */
+
+    public function getAllProfiles($orgName, $orgId)
+    {
+        try{
+            $apiResponse = [];
+            //
+            $recordInstance = $this->restClient->getOrganizationInstance($orgName, $orgId);
+            $bulkApiResponse = $recordInstance->getAllProfiles();
+            //
+            if ($bulkApiResponse->getData()) {
+                $zcrmProfiles = $bulkApiResponse->getData();
+                foreach ($zcrmProfiles as $index => $zcrmProfile) {
+                    $apiResponse[$index] = self::getProfilesData($zcrmProfile);
+                }
+    
+                return [
+                    'profiles' => $apiResponse,
+                ];
+            }
+        }catch(ZCRMException $e){
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+       
+    }
 }
