@@ -147,27 +147,36 @@ class API
      * @param  array  $params   [description]
      * @return [type]           [description]
      */
-    public function searchRecords($module, $word, $params = [])
+    public function searchRecords($module, $mapCriteria, $default = false, $params = [])
     {
         try {
+            $records = [];
+            $responseRecords = [];
+            $moreRecords = true;
             $page = isset($params['page']) ? $params['page'] : 1;
             $perPage = isset($params['perPage']) ? $params['perPage'] : 200;
 
-            $moduleInstance = $this->restClient->getModuleInstance($module);
-            $response = $moduleInstance->searchRecords($word, $page, $perPage);
+            $parsedCriteria = $default ? $mapCriteria : self::buildCriteria($mapCriteria);
 
-            $records = $response->getData();
-            $info = $response->getInfo();
-
-            $parsedRecords = self::parseRecords($records);
-
+            while($moreRecords) {
+                $moduleInstance = $this->restClient->getModuleInstance($module);
+                $response = $moduleInstance->searchRecordsByCriteria($parsedCriteria, $page, $perPage);
+                $records = $response->getData();
+                $requestInfo = $response->getInfo();
+                $parsedRecords = self::parseRecords($records);
+                $responseRecords = collect($responseRecords)
+                                    ->concat($parsedRecords)
+                                    ->all();
+                $moreRecords = $requestInfo->getMoreRecords();
+                $page++;
+            }
             return [
-                'records' => $parsedRecords,
+                'records' => $responseRecords,
                 'info' => [
-                    'more_records' => $info->getMoreRecords(),
-                    'count' => $info->getRecordCount(),
-                    'page' => $info->getPageNo(),
-                    'per_page' => $info->getPerPage(),
+                    'more_records' => $requestInfo->getMoreRecords(),
+                    'count' => $requestInfo->getRecordCount(),
+                    'page' => $requestInfo->getPageNo(),
+                    'per_page' => $requestInfo->getPerPage(),
                 ],
             ];
         } catch (ZCRMException $e) {
