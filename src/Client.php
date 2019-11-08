@@ -67,9 +67,9 @@ class Client
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    public function updateRecords($module, $records)
+    public function updateRecords($module,$id, $records)
     {
-        return $this->client->updateRecords($module, $records);
+        return $this->client->updateRecords($module,$id, $records);
     }
 
     /**

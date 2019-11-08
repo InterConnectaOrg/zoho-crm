@@ -82,13 +82,13 @@ class API
      * @param Array     $params         Array of parameters. Trigger ['workflow', 'approval', 'blueprint']
      * @return Array    $response
      */
-    public function updateRecords($module, $records = [], $params = [])
+    public function updateRecords($module,$id = null, $records = [], $params = [])
     {
         try {
             $responseRecords = [];
             $zcrmRecords = [];
             foreach ($records as $record) {
-                $zcrmRecord = Record::getInstance($module, null);
+                $zcrmRecord = Record::getInstance($module, $id);
                 foreach ($record as $key => $value) {
                     $zcrmRecord->setFieldValue($key, $value);
                 }
