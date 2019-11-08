@@ -9,6 +9,7 @@ use zcrmsdk\crm\crud\ZCRMRecord as Record;
 
 use zcrmsdk\crm\setup\users\ZCRMUser as User;
 use zcrmsdk\crm\exception\ZCRMException;
+use zcrmsdk\crm\setup\org\ZCRMOrganization;
 
 class API
 {
@@ -493,6 +494,81 @@ class API
             $recordResponse = self::getProfilesData($zcrmRecord);
             return [
                 'profile_by_id' => $recordResponse
+            ];
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Get Users
+     *
+     * @param String    $orgName         Organization Name
+     * @param String     $orgId          Organization ID
+     * @return Array    $response        Response in Array format
+     */
+    public function getAllUsers($orgName, $orgId)
+    {
+        try {
+            $apiResponse = [];
+            //
+            $orgIns = ZCRMOrganization::getInstance($orgName, $orgId);
+            $response = $orgIns->getAllUsers();
+            $userInstances = $response->getData();
+
+            foreach ($userInstances as $userInstance) {
+
+                if ($userInstance->getStatus() == 'active') {
+
+                    array_push(
+                        $apiResponse,
+                        self::handleUserResponse($userInstance)
+                    );
+                }
+            }
+            return $apiResponse;
+                
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * UpdateRecord
+     *
+     * @param String    $module         Module Name
+     * @param String     $id           ID of record
+     * @return Array    $records        Response in Array format
+     */
+    public function updateRecord($module, $id, $records)
+    {
+
+        try {
+            $zcrmRecords = [];
+            foreach ($records as $record) {
+                $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module, $id);
+                foreach ($record as $key => $value) {
+                    $zcrmRecord->setFieldValue($key, $value);
+                }
+                array_push($zcrmRecords, $zcrmRecord);
+            }
+            $apiResponse = $zcrmRecord->update();
+            $records = json_encode($apiResponse->getDetails());
+
+            return [
+                'records' => $records
             ];
         } catch (ZCRMException $e) {
             return [
