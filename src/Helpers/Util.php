@@ -37,6 +37,8 @@ trait Util
         $response = [];
 
         $response['id'] = $record->getEntityId();
+        $response['owner'] = $record->getOwner()->getId();
+        $response['createdTime'] = $record->getCreatedTime();
         $fields = $record->getData();
         if ($record->getLineItems()) {
             $response['Product_Details'] = self::getLineItems($record->getLineItems());
@@ -253,5 +255,35 @@ trait Util
             'permission_ids' => $profileCategory->getPermissionIds()
         ];
         return $response;
+    }
+      /**
+     * Handle Users 
+     * @param  [type]    $userInstance       
+     * @return Array                      Response in Array format   
+     */
+    public static function handleUserResponse($userInstance)
+    {
+        return [
+            'id' => $userInstance->getId(),
+            'email' => $userInstance->getEmail(),
+            'country' => $userInstance->getCountry(),
+            'confirm' => $userInstance->isConfirm(),
+            'city' => $userInstance->getCity(),
+            'fax' => $userInstance->getFax(),
+            'language' => $userInstance->getLanguage(),
+            'mobile' => $userInstance->getMobile(),
+            'name' => $userInstance->getFirstName() . ' ' . $userInstance->getLastName(),
+            'phone' => $userInstance->getPhone(),
+            'profile' => $userInstance->getProfile()->getName(),
+            'role' => $userInstance->getRole()->getName(),
+            'status' => $userInstance->getStatus(),
+            'state' => $userInstance->getState(),
+            'street' => $userInstance->getStreet(),
+            'timezone' => $userInstance->getTimeZone(),
+            'website' => $userInstance->getWebsite(),
+            'zip' => $userInstance->getZip(),
+            'zuid' => $userInstance->getZuid(),
+            'status' => $userInstance->getStatus()
+        ];
     }
 }

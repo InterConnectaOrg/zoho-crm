@@ -151,5 +151,14 @@ interface APIInterface
      * @param String $profileId     [description]
      * @return [type]               [description]
      */
-    function getProfileById($orgName,$orgId,$profileId);
+    function getProfileById($orgName, $orgId, $profileId);
+
+
+    /**
+     * [getAllUsers description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId           [description]
+     * @return [type]               [description]
+     */
+    function getAllUsers($orgName, $orgId);
 }
