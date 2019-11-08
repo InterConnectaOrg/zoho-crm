@@ -552,18 +552,13 @@ class API
      * @param String     $id           ID of record
      * @return Array    $records        Response in Array format
      */
-    public function updateRecord($module, $id, $records)
+    public function updateRecord($module, $id, $record)
     {
 
         try {
-            $zcrmRecords = [];
-            foreach ($records as $record) {
-                $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module, $id);
-                foreach ($record as $key => $value) {
-                    $zcrmRecord->setFieldValue($key, $value);
-                }
-                array_push($zcrmRecords, $zcrmRecord);
-            }
+
+            $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module, $id);
+            $zcrmRecord->setFieldValue($record);
             $apiResponse = $zcrmRecord->update();
             $records = json_encode($apiResponse->getDetails());
 
