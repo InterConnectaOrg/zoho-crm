@@ -56,9 +56,9 @@ class Client
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    public function createRecords($module, $records)
+    public function createRecords($module, $records,$params)
     {
-        return $this->client->createRecords($module, $records);
+        return $this->client->createRecords($module, $records,$params);
     }
 
     /**
