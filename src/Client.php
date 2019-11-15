@@ -56,9 +56,9 @@ class Client
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    public function createRecords($module, $records,$params)
+    public function createRecords($module, $records, $params = [])
     {
-        return $this->client->createRecords($module, $records,$params);
+        return $this->client->createRecords($module, $records, $params);
     }
 
     /**
@@ -67,9 +67,9 @@ class Client
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    public function updateRecords($module,$id, $records)
+    public function updateRecords($module, $id, $records, $params = [])
     {
-        return $this->client->updateRecords($module,$id, $records);
+        return $this->client->updateRecords($module, $id, $records, $params);
     }
 
     /**
@@ -224,7 +224,7 @@ class Client
     {
         return $this->client->deleteAttachment($module, $recordId, $attachmentId);
     }
-    
+
     /**
      * [getAllProfiles description]
      * @param  [type] $orgName       [description]
