@@ -82,13 +82,13 @@ class API
      * @param Array     $params         Array of parameters. Trigger ['workflow', 'approval', 'blueprint']
      * @return Array    $response
      */
-    public function updateRecords($module,$id = null, $records = [], $params = [])
+    public function updateRecords($module, $records = [], $params = [])
     {
         try {
             $responseRecords = [];
             $zcrmRecords = [];
             foreach ($records as $record) {
-                $zcrmRecord = Record::getInstance($module, $id);
+                $zcrmRecord = Record::getInstance($module, null);
                 foreach ($record as $key => $value) {
                     $zcrmRecord->setFieldValue($key, $value);
                 }
@@ -481,7 +481,7 @@ class API
      *
      * @param String    $orgName         Organization Name
      * @param String     $orgId          Organization ID
-     * @param String     $profileId      Profile ID   
+     * @param String     $profileId      Profile ID
      * @return Array    $response        Response in Array format
      */
     public function getProfileById($orgName, $orgId, $profileId)
@@ -533,7 +533,7 @@ class API
                 }
             }
             return $apiResponse;
-                
+
         } catch (ZCRMException $e) {
             return [
                 'http_code' => $e->getCode(),
