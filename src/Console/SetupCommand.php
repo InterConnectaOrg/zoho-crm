@@ -56,6 +56,7 @@ class SetupCommand extends Command
 
             $this->info('Zoho CRM has been set up successfully.');
         } catch (\Exception $e) {
+            report($e);
             $this->error($e->getMessage());
         }
     }

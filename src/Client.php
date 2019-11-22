@@ -56,9 +56,9 @@ class Client
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    public function createRecords($module, $records)
+    public function createRecords($module, $records, $params = [])
     {
-        return $this->client->createRecords($module, $records);
+        return $this->client->createRecords($module, $records, $params);
     }
 
     /**
@@ -67,9 +67,9 @@ class Client
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    public function updateRecords($module, $records)
+    public function updateRecords($module, $records, $params = [])
     {
-        return $this->client->updateRecords($module, $records);
+        return $this->client->updateRecords($module, $records, $params);
     }
 
     /**
@@ -127,9 +127,9 @@ class Client
      * @param  [type] $relatedModule [description]
      * @return [type]                [description]
      */
-    public function getRelatedRecords($module, $id, $relatedModule)
+    public function getRelatedRecords($module, $id, $relatedModule, $params)
     {
-        return $this->client->getRelatedRecords($module, $id, $relatedModule);
+        return $this->client->getRelatedRecords($module, $id, $relatedModule, $params);
     }
 
     /**
@@ -223,5 +223,39 @@ class Client
     public function deleteAttachment($module, $recordId, $attachmentId)
     {
         return $this->client->deleteAttachment($module, $recordId, $attachmentId);
+    }
+
+    /**
+     * [getAllProfiles description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId     [description]
+     * @return [type]               [description]
+     */
+    public function getAllProfiles($orgName,$orgId){
+
+        return $this->client->getAllProfiles($orgName,$orgId);
+    }
+
+     /**
+     * [getAllProfiles description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId        [description]
+     * @param String $profileId     [descriptio]
+     * @return [type]               [description]
+     */
+    public function getProfileById($orgName,$orgId,$profileId){
+
+        return $this->client->getProfileById($orgName,$orgId,$profileId);
+    }
+
+    /**
+     * [getAllUsers description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId        [description]
+     * @return [type]               [description]
+     */
+    public function getAllUsers($orgName, $orgId)
+    {
+        return $this->client->getAllUsers($orgName, $orgId);
     }
 }

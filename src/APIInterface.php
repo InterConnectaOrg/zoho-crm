@@ -39,7 +39,7 @@ interface APIInterface
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    function updateRecords($module, $records, $params);
+    function updateRecords($module,$id, $records, $params);
 
     /**
      * [upsertRecords description]
@@ -135,4 +135,30 @@ interface APIInterface
      * @return [type]               [description]
      */
     function deleteAttachment($module, $id, $attachmentId);
+
+     /**
+     * [getAllProfiles description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId           [description]
+     * @return [type]               [description]
+     */
+    function getAllProfiles($orgName,$orgId);
+
+     /**
+     * [getProfileById description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId           [description]
+     * @param String $profileId     [description]
+     * @return [type]               [description]
+     */
+    function getProfileById($orgName, $orgId, $profileId);
+
+
+    /**
+     * [getAllUsers description]
+     * @param  [type] $orgName       [description]
+     * @param  [type] $orgId           [description]
+     * @return [type]               [description]
+     */
+    function getAllUsers($orgName, $orgId);
 }
