@@ -1,3 +1,9 @@
+## [0.6.1 - (2019-11-28)](https://github.com/InterConnecta/zoho-crm/compare/0.6.0...0.6.1)
+
+### Changed
+- [0.6.1] Update README ([2965f01](https://github.com/InterConnecta/zoho-crm/commit/2965f01))
+
+
 ## [0.6.0 - (2019-11-22)](https://github.com/InterConnecta/zoho-crm/compare/0.5.0...0.6.0)
 
 ### Added

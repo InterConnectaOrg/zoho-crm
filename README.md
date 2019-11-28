@@ -2,8 +2,8 @@
 
 * Get yourself a [Zoho CRM account](https://www.zoho.com/crm/).
 * [Register your application](https://www.zoho.com/crm/developer/docs/php-sdk/clientapp.html)
-* PHP >= 7.2
-* Laravel >= 5.8
+* PHP >= 5.6.4
+* Laravel >= 5.4
 
 ## Installation
 
@@ -17,7 +17,7 @@ Or add it to `composer.json` manually:
 
 ```json
 "require": {
-    "interconnecta/zoho-crm": "0.1.*"
+    "interconnecta/zoho-crm": "0.6.*"
 }
 ```
 
@@ -38,7 +38,6 @@ ZOHO_CRM_CLIENT_ID=
 ZOHO_CRM_CLIENT_SECRET=
 ZOHO_CRM_REDIRECT_URI=
 ZOHO_CRM_CURRENT_USER_EMAIL=
-ZOHO_CRM_SANDBOX=
 ```
 
 Then, follow the next steps:
