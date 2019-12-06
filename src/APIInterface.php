@@ -186,4 +186,13 @@ interface APIInterface
      * @return Array    $response
      */
     function convertRecord($module, $recordId, $params);
+
+    /**
+     * [deleteNote description]
+     * @param  [type] $module       [description]
+     * @param  [type] $id           [description]
+     * @param  [type] $noteId       [description]
+     * @return [type]               [description]
+     */
+    function deleteNote($module, $id, $noteId);
 }

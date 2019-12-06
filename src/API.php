@@ -721,4 +721,101 @@ class API
             ];
         }
     }
+
+    /**
+    * Create Records
+    *
+    * @param String $module         Module Name
+    * @param String $recordId       Record ID from where the attachment will be deleted
+    * @param String $attachmentId   ID of the attachment to be deleted
+    */
+    public function deleteAttachment($module, $recordId, $attachmentId){
+        try{
+            $recordInstance = $this->restClient->getRecordInstance($module, $recordId);
+            $deletedAttachment = $recordInstance->deleteAttachment($attachmentId);
+
+            $response = [
+                'http_code' => $deletedAttachment->getHttpStatusCode(),
+                'status' => $deletedAttachment->getStatus(),
+                'message' => $deletedAttachment->getMessage(),
+                'code' => $deletedAttachment->getCode(),
+                'details' => $deletedAttachment->getDetails(),
+            ];
+            return $response;
+
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+   /**
+    * deleteRecord
+    *
+    * @param String $module         Module Name
+    * @param String $recordId       Record ID to be deleted
+    */
+    public function deleteRecord($module, $recordId){
+        try{
+            $recordInstance = $this->restClient->getRecordInstance($module, $recordId);
+            $deletedRecord = $recordInstance->delete();
+
+            $response = [
+                'http_code' => $deletedRecord->getHttpStatusCode(),
+                'status' => $deletedRecord->getStatus(),
+                'message' => $deletedRecord->getMessage(),
+                'code' => $deletedRecord->getCode(),
+                'details' => $deletedRecord->getDetails(),
+            ];
+            return $response;
+
+        } catch (ZCRMException $e){
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+       }
+    }
+
+    /**
+    * deleteRecord
+    *
+    * @param String $module         Module Name
+    * @param String $recordId       Record ID for the owner of the note
+    * @param String $noteId         Id of the note
+    */
+
+    public function deleteNote($module, $recordId, $noteId){
+        try{
+            $recordInstance = $this->restClient->getRecordInstance($module, $recordId);
+            $noteInstance = Note::getInstance($recordInstance, $noteId);
+            $deletedNote = $recordInstance->deleteNote($noteInstance);
+
+            $response = [
+                'http_code' => $deletedNote->getHttpStatusCode(),
+                'status' => $deletedNote->getStatus(),
+                'message' => $deletedNote->getMessage(),
+                'code' => $deletedNote->getCode(),
+                'details' => $deletedNote->getDetails(),
+            ];
+            return $response;
+
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
 }

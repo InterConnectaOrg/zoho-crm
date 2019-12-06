@@ -281,4 +281,16 @@ class Client
     {
         return $this->client->createNotes($module, $parentId, $notes);
     }
+
+    /**
+     * [delete note description]
+     * @param  [type] $module       [description]
+     * @param  [type] $recordId        [description]
+     * @param  [type] $noteId        [description]
+     * @return [type]               [description]
+     */
+    public function deleteNote($module, $recordId, $noteId)
+    {
+        return $this->client->deleteNote($module, $recordId, $noteId);
+    }
 }
