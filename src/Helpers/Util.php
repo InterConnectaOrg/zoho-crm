@@ -101,13 +101,19 @@ trait Util
      * @param  [type] $criteriaPatternMap [description]
      * @return [type]                     [description]
      */
-    public static function buildCriteria($criteria)
+    public static function buildCriteria($criteriaPatternMap)
     {
-        $field = $criteria['field'];
-        $operator = $criteria['operator'];
-        $value = $criteria['value'];
+        $criteriaPatternArray = collect($criteriaPatternMap)
+            ->filter(function ($item, $index) { return !is_string($item); })
+            ->map( function ($item, $index) {
+                if(self::isMultidimensionalArray($item)) {
+                    return self::buildCriteria($item);
+                }
+                return "({$item['field']}:{$item['operator']}:{$item['value']})";
+            })
+            ->all();
 
-        return "({$field}:{$operator}:{$value})";
+        return '(' . implode((isset($criteriaPatternMap['operator'])) ? $criteriaPatternMap['operator'] : '', $criteriaPatternArray) . ')'; 
     }
 
     /**
