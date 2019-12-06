@@ -674,4 +674,53 @@ class API
             ];
         }
     }
+
+    /**
+     * Convert Record
+     *
+     * @param String    $module         Module Name
+     * @param Array     $recordId       ID of the parent record of the note
+     * @param Array     $params         Array of notes
+     * @return Array    $response
+     */
+    public function convertRecord($module, $recordId, $params = [])
+    {
+        try {
+            $overwrite = isset($params['overwrite']) ? $params['overwrite'] : true;
+            $notifyLeadOwner = isset($params['notify_lead_owner']) ? $params['notify_lead_owner'] : true;
+            $notifyNewEntityOwner = isset($params['notify_new_entity_owner']) ? $params['notify_new_entity_owner'] : true;
+            $accounts = isset($params['accounts']) ? $params['accounts'] : null;
+            $contacts = isset($params['contacts']) ? $params['contacts'] : null;
+            $assignTo = isset($params['assign_to']) ? $params['assign_to'] : null;
+            $dealId = isset($params['deal_id']) ? $params['deal_id'] : null;
+
+            $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module,$recordId);
+            if(isset($dealId)) {
+                $dealRecord = Record::getInstance("Deals",$dealId)->getData();
+            } else {
+                $dealRecord = Record::getInstance("Deals",$dealId);
+            }
+            $details = [
+                'overwrite' => $overwrite,
+                'notify_lead_owner' => $notifyLeadOwner,
+                'notify_new_entity_owner' => $notifyNewEntityOwner        ,
+                'Accounts' => $accounts,
+                'Contacts' => $contacts,
+                'assign_to' => $assignTo
+            ];
+
+            $response = $zcrmRecord->convert($dealRecord,$details);
+
+            return $response;
+
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error'
+            ];
+        }
+    }
 }
