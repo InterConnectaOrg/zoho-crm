@@ -18,6 +18,13 @@ interface APIInterface
     function getFieldsByModule($module);
 
     /**
+     * [getLayoutsByModule description]
+     * @param  [type] $module [description]
+     * @return [type]         [description]
+     */
+    function getLayoutsByModule($module);
+
+    /**
      * [getRecords description]
      * @param  [type] $module [description]
      * @param  [type] $params [description]
@@ -39,7 +46,7 @@ interface APIInterface
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    function updateRecords($module,$id, $records, $params);
+    function updateRecords($module, $id, $records, $params);
 
     /**
      * [upsertRecords description]
@@ -136,15 +143,15 @@ interface APIInterface
      */
     function deleteAttachment($module, $id, $attachmentId);
 
-     /**
+    /**
      * [getAllProfiles description]
      * @param  [type] $orgName       [description]
      * @param  [type] $orgId           [description]
      * @return [type]               [description]
      */
-    function getAllProfiles($orgName,$orgId);
+    function getAllProfiles($orgName, $orgId);
 
-     /**
+    /**
      * [getProfileById description]
      * @param  [type] $orgName       [description]
      * @param  [type] $orgId           [description]
