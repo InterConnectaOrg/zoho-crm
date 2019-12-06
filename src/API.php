@@ -607,4 +607,37 @@ class API
             ];
         }
     }
+
+    /**
+     * Get Layouts by Module
+     *
+     * @param String    $module         Module Name
+     * @return Array    $records        Response in Array format
+     */
+    public function getLayoutsByModule($module)
+    {
+        try {
+            $response = [];
+
+            $moduleInstance = Module::getInstance($module);
+
+            $layoutsResponse = $moduleInstance->getAllLayouts();
+
+            $layouts = $layoutsResponse->getData();
+
+            foreach ($layouts as $layout) {
+                array_push($response, self::getLayoutData($layout));
+            }
+
+            return $response;
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
 }

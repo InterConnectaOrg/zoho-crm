@@ -382,4 +382,69 @@ trait Util
 
         return $lookupField;
     }
+
+    /**
+     * Get Layout Data
+     *
+     * @param Layout    $layout        Layout Object
+     * @return Array    $response      Response in Array format
+     */
+    public static function getLayoutData(Layout $layout)
+    {
+        return [
+            'id' => $layout->getId(),
+            'name' => $layout->getName(),
+            'is_visible' => $layout->isVisible(),
+            'accessible_profiles' => self::getAccessibleProfiles($layout),
+            'sections' => self::getLayoutSections($layout)
+        ];
+    }
+
+    /**
+     * Get Accesible Profiles
+     *
+     * @param Layout    $layout        Layout Object
+     * @return Array    $response      Response in Array format
+     */
+    public static function getAccessibleProfiles(Layout $layout)
+    {
+        $accessibleProfiles = [];
+
+        foreach ($layout->getAccessibleProfiles() as $profile) {
+            array_push($accessibleProfiles, self::getProfilesData($profile));
+        }
+
+        return $accessibleProfiles;
+    }
+
+    /**
+     * Get Layout Sections
+     *
+     * @param Layout    $layout        Layout Object
+     * @return Array    $response      Response in Array format
+     */
+    public static function getLayoutSections(Layout $layout)
+    {
+        $sections = [];
+
+        foreach ($layout->getSections() as $section) {
+            array_push($sections, self::getLayoutSectionData($section));
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Get Accesible Profiles
+     *
+     * @param Section   $section       Section Object
+     * @return Array    $response      Response in Array format
+     */
+    public static function getLayoutSectionData(Section $section)
+    {
+        return [
+            'name' => $section->getName(),
+            'display_name' => $section->getDisplayName()
+        ];
+    }
 }
