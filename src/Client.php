@@ -270,4 +270,16 @@ class Client
     {
         return $this->client->getAllUsers($orgName, $orgId);
     }
+
+    /**
+     * [createNote description]
+     * @param  [type] $module       [description]
+     * @param  [type] $parentId        [description]
+     * @param  [type] $notes        [description]
+     * @return [type]               [description]
+     */
+    public function createNotes($module, $parentId, $notes)
+    {
+        return $this->client->createNotes($module, $parentId, $notes);
+    }
 }

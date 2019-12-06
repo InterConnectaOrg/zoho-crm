@@ -640,4 +640,38 @@ class API
             ];
         }
     }
+
+    /**
+     * Create Notes
+     *
+     * @param String    $module         Module Name
+     * @param Array     $parentId       ID of the parent record of the note
+     * @param Array     $notes          Array of notes
+     * @return Array    $response
+     */
+    public function createNotes($module, $parentId, $notes)
+    {
+        try {
+            $createdNotes = [];
+            $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module,$parentId);
+
+            foreach($notes as $note) {
+                $zcrmNote = Note::getInstance($zcrmRecord);
+                $zcrmNote->setTitle($note['title']);
+                $zcrmNote->setContent($note['content']);
+                $apiResponse = $zcrmRecord->addNote($zcrmNote);
+                $createdNote = $apiResponse->getData();
+                array_push($createdNotes,$apiResponse->getDetails());
+            }
+            return $createdNotes;
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error'
+            ];
+        }
+    }
 }

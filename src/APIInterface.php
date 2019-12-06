@@ -160,7 +160,6 @@ interface APIInterface
      */
     function getProfileById($orgName, $orgId, $profileId);
 
-
     /**
      * [getAllUsers description]
      * @param  [type] $orgName       [description]
@@ -168,4 +167,13 @@ interface APIInterface
      * @return [type]               [description]
      */
     function getAllUsers($orgName, $orgId);
+
+    /**
+     * [createNotes description]
+     * @param  [type] $module       [description]
+     * @param  [type] $parentId          [description]
+     * @param  [type] $notes          [description]
+     * @return [type]               [description]
+     */
+    function createNotes($module, $parentId, $notes);
 }
