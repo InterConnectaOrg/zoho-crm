@@ -39,6 +39,16 @@ class Client
     }
 
     /**
+     * [getLayoutsByModule description]
+     * @param  [type] $module [description]
+     * @return [type]         [description]
+     */
+    public function getLayoutsByModule($module)
+    {
+        return $this->client->getLayoutsByModule($module);
+    }
+
+    /**
      * [getRecords description]
      * @param  [type]  $module   [description]
      * @param  array   $params   [description]
@@ -231,21 +241,23 @@ class Client
      * @param  [type] $orgId     [description]
      * @return [type]               [description]
      */
-    public function getAllProfiles($orgName,$orgId){
+    public function getAllProfiles($orgName, $orgId)
+    {
 
-        return $this->client->getAllProfiles($orgName,$orgId);
+        return $this->client->getAllProfiles($orgName, $orgId);
     }
 
-     /**
+    /**
      * [getAllProfiles description]
      * @param  [type] $orgName       [description]
      * @param  [type] $orgId        [description]
      * @param String $profileId     [descriptio]
      * @return [type]               [description]
      */
-    public function getProfileById($orgName,$orgId,$profileId){
+    public function getProfileById($orgName, $orgId, $profileId)
+    {
 
-        return $this->client->getProfileById($orgName,$orgId,$profileId);
+        return $this->client->getProfileById($orgName, $orgId, $profileId);
     }
 
     /**

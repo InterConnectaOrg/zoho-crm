@@ -2,10 +2,16 @@
 
 namespace Zoho\CRM\Helpers;
 
-use zcrmsdk\crm\crud\ZCRMRecord as Record;
-use zcrmsdk\crm\crud\ZCRMAttachment as Attachment;
 use zcrmsdk\crm\crud\ZCRMInventoryLineItem as LineItem;
-
+use zcrmsdk\crm\crud\ZCRMAttachment as Attachment;
+use zcrmsdk\crm\crud\ZCRMSection as Section;
+use zcrmsdk\crm\crud\ZCRMRecord as Record;
+use zcrmsdk\crm\crud\ZCRMLayout as Layout;
+use zcrmsdk\crm\crud\ZCRMField as Field;
+use zcrmsdk\crm\crud\ZCRMPermission as Permission;
+use zcrmsdk\crm\crud\ZCRMProfileCategory as ProfileCategory;
+use zcrmsdk\crm\crud\ZCRMProfileSection as ProfileSection;
+use zcrmsdk\crm\setup\users\ZCRMProfile as Profile;
 
 trait Util
 {
@@ -256,7 +262,7 @@ trait Util
         ];
         return $response;
     }
-      /**
+    /**
      * Handle Users 
      * @param  [type]    $userInstance       
      * @return Array                      Response in Array format   
@@ -284,6 +290,161 @@ trait Util
             'zip' => $userInstance->getZip(),
             'zuid' => $userInstance->getZuid(),
             'status' => $userInstance->getStatus()
+        ];
+    }
+
+    /**
+     * Get Field Data
+     *
+     * @param Field     $field          Field Object
+     * @return Array    $response       Response in Array format
+     */
+    public static function getFieldData(Field $field)
+    {
+        return [
+            'id' => $field->getId(),
+            'api_name' => $field->getApiName(),
+            'data_type' => $field->getDataType(),
+            'label_name' => $field->getFieldLabel(),
+            'is_mandatory' => $field->isMandatory(),
+            'is_readonly' => $field->isReadOnly(),
+            'is_visible' => $field->isVisible(),
+            'is_unique' => $field->isUniqueField(),
+            'is_custom_field' => $field->isCustomField(),
+            'default_value' => $field->getDefaultValue(),
+            'length' => $field->getLength(),
+            'created_source' => $field->getCreatedSource(),
+            'sequence_number' => $field->getSequenceNumber(),
+            'is_business_card_supported' => $field->isBusinessCardSupported(),
+            'is_formula' => $field->isFormulaField(),
+            'formula_return_type' => $field->getFormulaReturnType(),
+            'formula_expression' => $field->getFormulaExpression(),
+            'is_currency' => $field->isCurrencyField(),
+            'currency_precision' => $field->getPrecision(),
+            'currency_rounding_option' => $field->getRoundingOption(),
+            'is_autonumber' => $field->isAutoNumberField(),
+            'autonumber_prefix' => $field->getPrefix(),
+            'autonumber_sufix' => $field->getSuffix(),
+            'autonumber_start_number' => $field->getStartNumber(),
+            'picklist_values' => self::getPickListFieldValues($field),
+            'layout_permissions' => self::getFieldLayoutPermissions($field),
+            'lookup_field' => self::getLookupField($field),
+        ];
+    }
+
+    /**
+     * Get Field Layout Permissions
+     *
+     * @param Field     $field          Field Object
+     * @return Array    $response       Response in Array format
+     */
+    public static function getFieldLayoutPermissions(Field $field)
+    {
+        $layoutPermissions = [];
+
+        foreach ($field->getFieldLayoutPermissions() as $permission) {
+            array_push($layoutPermissions, $permission);
+        }
+
+        return $layoutPermissions;
+    }
+
+    /**
+     * Get Picklist Field Values
+     *
+     * @param Field     $field          Field Object
+     * @return Array    $response       Response in Array format
+     */
+    public static function getPickListFieldValues(Field $field)
+    {
+        $pickListValues = [];
+
+        foreach ($field->getPickListFieldValues() as $pickList) {
+            array_push($pickListValues, $pickList->getDisplayValue());
+        }
+
+        return $pickListValues;
+    }
+
+    /**
+     * Get Lookup Field
+     *
+     * @param Field     $field          Field Object
+     * @return Array    $response       Response in Array format
+     */
+    public static function getLookupField(Field $field)
+    {
+        $lookupField = [];
+
+        if ($field->getLookupField() != null) {
+            $lookupField = ['module' => $field->getLookupField()->getModule()];
+        }
+
+        return $lookupField;
+    }
+
+    /**
+     * Get Layout Data
+     *
+     * @param Layout    $layout        Layout Object
+     * @return Array    $response      Response in Array format
+     */
+    public static function getLayoutData(Layout $layout)
+    {
+        return [
+            'id' => $layout->getId(),
+            'name' => $layout->getName(),
+            'is_visible' => $layout->isVisible(),
+            'accessible_profiles' => self::getAccessibleProfiles($layout),
+            'sections' => self::getLayoutSections($layout)
+        ];
+    }
+
+    /**
+     * Get Accesible Profiles
+     *
+     * @param Layout    $layout        Layout Object
+     * @return Array    $response      Response in Array format
+     */
+    public static function getAccessibleProfiles(Layout $layout)
+    {
+        $accessibleProfiles = [];
+
+        foreach ($layout->getAccessibleProfiles() as $profile) {
+            array_push($accessibleProfiles, self::getProfilesData($profile));
+        }
+
+        return $accessibleProfiles;
+    }
+
+    /**
+     * Get Layout Sections
+     *
+     * @param Layout    $layout        Layout Object
+     * @return Array    $response      Response in Array format
+     */
+    public static function getLayoutSections(Layout $layout)
+    {
+        $sections = [];
+
+        foreach ($layout->getSections() as $section) {
+            array_push($sections, self::getLayoutSectionData($section));
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Get Accesible Profiles
+     *
+     * @param Section   $section       Section Object
+     * @return Array    $response      Response in Array format
+     */
+    public static function getLayoutSectionData(Section $section)
+    {
+        return [
+            'name' => $section->getName(),
+            'display_name' => $section->getDisplayName()
         ];
     }
 }

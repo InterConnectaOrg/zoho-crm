@@ -1,3 +1,9 @@
+## [0.7.0 - (2019-12-06)](https://github.com/InterConnecta/zoho-crm/compare/0.6.1...0.7.0)
+
+### Added
+  - [get-layouts-by-module] Added getLayoutsByModule method and its Utils ([9530e0b](https://github.com/InterConnecta/zoho-crm/commit/9530e0b))
+  - [get-fields-my-module] Added getFieldsByModule and Util method ([85f03a4](https://github.com/InterConnecta/zoho-crm/commit/85f03a4))
+
 ## [0.6.1 - (2019-11-28)](https://github.com/InterConnecta/zoho-crm/compare/0.6.0...0.6.1)
 
 ### Changed

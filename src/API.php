@@ -159,15 +159,15 @@ class API
 
             $parsedCriteria = $default ? $mapCriteria : self::buildCriteria($mapCriteria);
 
-            while($moreRecords) {
+            while ($moreRecords) {
                 $moduleInstance = $this->restClient->getModuleInstance($module);
                 $response = $moduleInstance->searchRecordsByCriteria($parsedCriteria, $page, $perPage);
                 $records = $response->getData();
                 $requestInfo = $response->getInfo();
                 $parsedRecords = self::parseRecords($records);
                 $responseRecords = collect($responseRecords)
-                                    ->concat($parsedRecords)
-                                    ->all();
+                    ->concat($parsedRecords)
+                    ->all();
                 $moreRecords = $requestInfo->getMoreRecords();
                 $page++;
             }
@@ -334,11 +334,11 @@ class API
             return $responseRecords;
         } catch (ZCRMException $e) {
             return [
-                ‘code’ => $e->getCode(),
-                ‘details’ => $e->getExceptionDetails(),
-                ‘message’ => $e->getMessage(),
-                ‘exception_code’ => $e->getExceptionCode(),
-                ‘status’ => ‘error’,
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
             ];
         }
     }
@@ -476,7 +476,7 @@ class API
         }
     }
 
-     /**
+    /**
      * Get Profile By Id
      *
      * @param String    $orgName         Organization Name
@@ -533,7 +533,6 @@ class API
                 }
             }
             return $apiResponse;
-
         } catch (ZCRMException $e) {
             return [
                 'http_code' => $e->getCode(),
@@ -571,6 +570,72 @@ class API
                 'details' => $e->getExceptionDetails(),
                 'message' => $e->getMessage(),
                 'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Get Fields by Module
+     *
+     * @param String    $module         Module Name
+     * @return Array    $records        Response in Array format
+     */
+    public function getFieldsByModule($module)
+    {
+        try {
+            $response = [];
+
+            $moduleInstance = Module::getInstance($module);
+
+            $fieldsResponse = $moduleInstance->getAllFields();
+
+            $fields = $fieldsResponse->getData();
+
+            foreach ($fields as $field) {
+                array_push($response, self::getFieldData($field));
+            }
+
+            return $response;
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Get Layouts by Module
+     *
+     * @param String    $module         Module Name
+     * @return Array    $records        Response in Array format
+     */
+    public function getLayoutsByModule($module)
+    {
+        try {
+            $response = [];
+
+            $moduleInstance = Module::getInstance($module);
+
+            $layoutsResponse = $moduleInstance->getAllLayouts();
+
+            $layouts = $layoutsResponse->getData();
+
+            foreach ($layouts as $layout) {
+                array_push($response, self::getLayoutData($layout));
+            }
+
+            return $response;
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
                 'status' => 'error',
             ];
         }
