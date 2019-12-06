@@ -165,9 +165,7 @@ class API
                 $records = $response->getData();
                 $requestInfo = $response->getInfo();
                 $parsedRecords = self::parseRecords($records);
-                $responseRecords = collect($responseRecords)
-                    ->concat($parsedRecords)
-                    ->all();
+                $responseRecords = collect($responseRecords)->concat($parsedRecords)->all();
                 $moreRecords = $requestInfo->getMoreRecords();
                 $page++;
             }
