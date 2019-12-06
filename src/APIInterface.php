@@ -176,4 +176,14 @@ interface APIInterface
      * @return [type]               [description]
      */
     function createNotes($module, $parentId, $notes);
+
+    /**
+     * [convertRecord description]
+     *
+     * @param String    $module         Module Name
+     * @param Array     $recordId       ID of the parent record of the note
+     * @param Array     $params         Array of notes
+     * @return Array    $response
+     */
+    function convertRecord($module, $recordId, $params);
 }

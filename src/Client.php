@@ -109,12 +109,11 @@ class Client
      * @param  [type] $module     [description]
      * @param  [type] $id         [description]
      * @param  array  $params     [description]
-     * @param  array  $autoParams [description]
      * @return [type]             [description]
      */
-    public function convertRecord($module, $id, $params = [], $autoParams = [])
+    public function convertRecord($module, $id, $params = [])
     {
-        return $this->client->convertRecord($module, $id, $params, $autoParams);
+        return $this->client->convertRecord($module, $id, $params);
     }
 
     /**
