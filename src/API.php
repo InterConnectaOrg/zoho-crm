@@ -818,4 +818,50 @@ class API
             ];
         }
     }
+    
+    /**
+     * Get Related Lists By Module
+     *
+     * @param String    $module         Module Name                                
+     */
+    function getRelatedListsByModule($module){
+        try {
+            $arrLists = [];
+            $moduleInstance = $this->restClient->getModuleInstance($module);
+            $bulkApiResponse = $moduleInstance->getAllRelatedLists();
+            if($bulkApiResponse->getData()){
+                $relatedLists = $bulkApiResponse->getData();
+                $info = $bulkApiResponse->getInfo();
+                foreach ($relatedLists as $relatedList)
+                {
+                    $id = $relatedList->getId();
+                    $hrefEntity = $relatedList->getHref();
+                    $hrefEntity = str_replace('{ENTITYID}', $id, $hrefEntity);
+                    $listResponse = [
+                        'api_name' => $relatedList->getApiName(),
+                        'module' => $relatedList->getModule(),
+                        'display_label' => $relatedList->getDisplayLabel(),
+                        'is_visible' => $relatedList->isVisible(),
+                        'name' => $relatedList->getName(),
+                        'id' => $id,
+                        'href' => $hrefEntity,
+                        'type' => $relatedList->getType()
+                    ];
+                    array_push($arrLists, $listResponse);
+                }
+                return [
+                    'records' => $arrLists
+                ];
+            }
+           
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
 }
