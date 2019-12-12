@@ -39,6 +39,16 @@ class Client
     }
 
     /**
+     * [getLayoutsByModule description]
+     * @param  [type] $module [description]
+     * @return [type]         [description]
+     */
+    public function getLayoutsByModule($module)
+    {
+        return $this->client->getLayoutsByModule($module);
+    }
+
+    /**
      * [getRecords description]
      * @param  [type]  $module   [description]
      * @param  array   $params   [description]
@@ -99,12 +109,11 @@ class Client
      * @param  [type] $module     [description]
      * @param  [type] $id         [description]
      * @param  array  $params     [description]
-     * @param  array  $autoParams [description]
      * @return [type]             [description]
      */
-    public function convertRecord($module, $id, $params = [], $autoParams = [])
+    public function convertRecord($module, $id, $params = [])
     {
-        return $this->client->convertRecord($module, $id, $params, $autoParams);
+        return $this->client->convertRecord($module, $id, $params);
     }
 
     /**
@@ -231,21 +240,23 @@ class Client
      * @param  [type] $orgId     [description]
      * @return [type]               [description]
      */
-    public function getAllProfiles($orgName,$orgId){
+    public function getAllProfiles($orgName, $orgId)
+    {
 
-        return $this->client->getAllProfiles($orgName,$orgId);
+        return $this->client->getAllProfiles($orgName, $orgId);
     }
 
-     /**
+    /**
      * [getAllProfiles description]
      * @param  [type] $orgName       [description]
      * @param  [type] $orgId        [description]
      * @param String $profileId     [descriptio]
      * @return [type]               [description]
      */
-    public function getProfileById($orgName,$orgId,$profileId){
+    public function getProfileById($orgName, $orgId, $profileId)
+    {
 
-        return $this->client->getProfileById($orgName,$orgId,$profileId);
+        return $this->client->getProfileById($orgName, $orgId, $profileId);
     }
 
     /**
@@ -257,5 +268,29 @@ class Client
     public function getAllUsers($orgName, $orgId)
     {
         return $this->client->getAllUsers($orgName, $orgId);
+    }
+
+    /**
+     * [createNote description]
+     * @param  [type] $module       [description]
+     * @param  [type] $parentId        [description]
+     * @param  [type] $notes        [description]
+     * @return [type]               [description]
+     */
+    public function createNotes($module, $parentId, $notes)
+    {
+        return $this->client->createNotes($module, $parentId, $notes);
+    }
+
+    /**
+     * [delete note description]
+     * @param  [type] $module       [description]
+     * @param  [type] $recordId        [description]
+     * @param  [type] $noteId        [description]
+     * @return [type]               [description]
+     */
+    public function deleteNote($module, $recordId, $noteId)
+    {
+        return $this->client->deleteNote($module, $recordId, $noteId);
     }
 }

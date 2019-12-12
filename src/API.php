@@ -159,15 +159,13 @@ class API
 
             $parsedCriteria = $default ? $mapCriteria : self::buildCriteria($mapCriteria);
 
-            while($moreRecords) {
+            while ($moreRecords) {
                 $moduleInstance = $this->restClient->getModuleInstance($module);
                 $response = $moduleInstance->searchRecordsByCriteria($parsedCriteria, $page, $perPage);
                 $records = $response->getData();
                 $requestInfo = $response->getInfo();
                 $parsedRecords = self::parseRecords($records);
-                $responseRecords = collect($responseRecords)
-                                    ->concat($parsedRecords)
-                                    ->all();
+                $responseRecords = collect($responseRecords)->concat($parsedRecords)->all();
                 $moreRecords = $requestInfo->getMoreRecords();
                 $page++;
             }
@@ -334,11 +332,11 @@ class API
             return $responseRecords;
         } catch (ZCRMException $e) {
             return [
-                ‘code’ => $e->getCode(),
-                ‘details’ => $e->getExceptionDetails(),
-                ‘message’ => $e->getMessage(),
-                ‘exception_code’ => $e->getExceptionCode(),
-                ‘status’ => ‘error’,
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
             ];
         }
     }
@@ -476,7 +474,7 @@ class API
         }
     }
 
-     /**
+    /**
      * Get Profile By Id
      *
      * @param String    $orgName         Organization Name
@@ -533,7 +531,6 @@ class API
                 }
             }
             return $apiResponse;
-
         } catch (ZCRMException $e) {
             return [
                 'http_code' => $e->getCode(),
@@ -565,6 +562,298 @@ class API
             return [
                 'records' => $records
             ];
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Get Fields by Module
+     *
+     * @param String    $module         Module Name
+     * @return Array    $records        Response in Array format
+     */
+    public function getFieldsByModule($module)
+    {
+        try {
+            $response = [];
+
+            $moduleInstance = Module::getInstance($module);
+
+            $fieldsResponse = $moduleInstance->getAllFields();
+
+            $fields = $fieldsResponse->getData();
+
+            foreach ($fields as $field) {
+                array_push($response, self::getFieldData($field));
+            }
+
+            return $response;
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Get Layouts by Module
+     *
+     * @param String    $module         Module Name
+     * @return Array    $records        Response in Array format
+     */
+    public function getLayoutsByModule($module)
+    {
+        try {
+            $response = [];
+
+            $moduleInstance = Module::getInstance($module);
+
+            $layoutsResponse = $moduleInstance->getAllLayouts();
+
+            $layouts = $layoutsResponse->getData();
+
+            foreach ($layouts as $layout) {
+                array_push($response, self::getLayoutData($layout));
+            }
+
+            return $response;
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Create Notes
+     *
+     * @param String    $module         Module Name
+     * @param Array     $parentId       ID of the parent record of the note
+     * @param Array     $notes          Array of notes
+     * @return Array    $response
+     */
+    public function createNotes($module, $parentId, $notes)
+    {
+        try {
+            $createdNotes = [];
+            $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module,$parentId);
+
+            foreach($notes as $note) {
+                $zcrmNote = Note::getInstance($zcrmRecord);
+                $zcrmNote->setTitle($note['title']);
+                $zcrmNote->setContent($note['content']);
+                $apiResponse = $zcrmRecord->addNote($zcrmNote);
+                $createdNote = $apiResponse->getData();
+                array_push($createdNotes,$apiResponse->getDetails());
+            }
+            return $createdNotes;
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error'
+            ];
+        }
+    }
+
+    /**
+     * Convert Record
+     *
+     * @param String    $module         Module Name
+     * @param Array     $recordId       ID of the parent record of the note
+     * @param Array     $params         Array of notes
+     * @return Array    $response
+     */
+    public function convertRecord($module, $recordId, $params = [])
+    {
+        try {
+            $overwrite = isset($params['overwrite']) ? $params['overwrite'] : true;
+            $notifyLeadOwner = isset($params['notify_lead_owner']) ? $params['notify_lead_owner'] : true;
+            $notifyNewEntityOwner = isset($params['notify_new_entity_owner']) ? $params['notify_new_entity_owner'] : true;
+            $accounts = isset($params['accounts']) ? $params['accounts'] : null;
+            $contacts = isset($params['contacts']) ? $params['contacts'] : null;
+            $assignTo = isset($params['assign_to']) ? $params['assign_to'] : null;
+            $dealId = isset($params['deal_id']) ? $params['deal_id'] : null;
+
+            $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module,$recordId);
+            if(isset($dealId)) {
+                $dealRecord = Record::getInstance("Deals",$dealId)->getData();
+            } else {
+                $dealRecord = Record::getInstance("Deals",$dealId);
+            }
+            $details = [
+                'overwrite' => $overwrite,
+                'notify_lead_owner' => $notifyLeadOwner,
+                'notify_new_entity_owner' => $notifyNewEntityOwner        ,
+                'Accounts' => $accounts,
+                'Contacts' => $contacts,
+                'assign_to' => $assignTo
+            ];
+
+            $response = $zcrmRecord->convert($dealRecord,$details);
+
+            return $response;
+
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error'
+            ];
+        }
+    }
+
+    /**
+    * Create Records
+    *
+    * @param String $module         Module Name
+    * @param String $recordId       Record ID from where the attachment will be deleted
+    * @param String $attachmentId   ID of the attachment to be deleted
+    */
+    public function deleteAttachment($module, $recordId, $attachmentId){
+        try{
+            $recordInstance = $this->restClient->getRecordInstance($module, $recordId);
+            $deletedAttachment = $recordInstance->deleteAttachment($attachmentId);
+
+            $response = [
+                'http_code' => $deletedAttachment->getHttpStatusCode(),
+                'status' => $deletedAttachment->getStatus(),
+                'message' => $deletedAttachment->getMessage(),
+                'code' => $deletedAttachment->getCode(),
+                'details' => $deletedAttachment->getDetails(),
+            ];
+            return $response;
+
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+   /**
+    * deleteRecord
+    *
+    * @param String $module         Module Name
+    * @param String $recordId       Record ID to be deleted
+    */
+    public function deleteRecord($module, $recordId){
+        try{
+            $recordInstance = $this->restClient->getRecordInstance($module, $recordId);
+            $deletedRecord = $recordInstance->delete();
+
+            $response = [
+                'http_code' => $deletedRecord->getHttpStatusCode(),
+                'status' => $deletedRecord->getStatus(),
+                'message' => $deletedRecord->getMessage(),
+                'code' => $deletedRecord->getCode(),
+                'details' => $deletedRecord->getDetails(),
+            ];
+            return $response;
+
+        } catch (ZCRMException $e){
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+       }
+    }
+
+    /**
+    * deleteRecord
+    *
+    * @param String $module         Module Name
+    * @param String $recordId       Record ID for the owner of the note
+    * @param String $noteId         Id of the note
+    */
+
+    public function deleteNote($module, $recordId, $noteId){
+        try{
+            $recordInstance = $this->restClient->getRecordInstance($module, $recordId);
+            $noteInstance = Note::getInstance($recordInstance, $noteId);
+            $deletedNote = $recordInstance->deleteNote($noteInstance);
+
+            $response = [
+                'http_code' => $deletedNote->getHttpStatusCode(),
+                'status' => $deletedNote->getStatus(),
+                'message' => $deletedNote->getMessage(),
+                'code' => $deletedNote->getCode(),
+                'details' => $deletedNote->getDetails(),
+            ];
+            return $response;
+
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
+    
+    /**
+     * Get Related Lists By Module
+     *
+     * @param String    $module         Module Name                                
+     */
+    function getRelatedListsByModule($module){
+        try {
+            $arrLists = [];
+            $moduleInstance = $this->restClient->getModuleInstance($module);
+            $bulkApiResponse = $moduleInstance->getAllRelatedLists();
+            if($bulkApiResponse->getData()){
+                $relatedLists = $bulkApiResponse->getData();
+                $info = $bulkApiResponse->getInfo();
+                foreach ($relatedLists as $relatedList)
+                {
+                    $id = $relatedList->getId();
+                    $hrefEntity = $relatedList->getHref();
+                    $hrefEntity = str_replace('{ENTITYID}', $id, $hrefEntity);
+                    $listResponse = [
+                        'api_name' => $relatedList->getApiName(),
+                        'module' => $relatedList->getModule(),
+                        'display_label' => $relatedList->getDisplayLabel(),
+                        'is_visible' => $relatedList->isVisible(),
+                        'name' => $relatedList->getName(),
+                        'id' => $id,
+                        'href' => $hrefEntity,
+                        'type' => $relatedList->getType()
+                    ];
+                    array_push($arrLists, $listResponse);
+                }
+                return [
+                    'records' => $arrLists
+                ];
+            }
+           
         } catch (ZCRMException $e) {
             return [
                 'http_code' => $e->getCode(),

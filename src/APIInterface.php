@@ -18,6 +18,13 @@ interface APIInterface
     function getFieldsByModule($module);
 
     /**
+     * [getLayoutsByModule description]
+     * @param  [type] $module [description]
+     * @return [type]         [description]
+     */
+    function getLayoutsByModule($module);
+
+    /**
      * [getRecords description]
      * @param  [type] $module [description]
      * @param  [type] $params [description]
@@ -39,7 +46,7 @@ interface APIInterface
      * @param  [type] $records [description]
      * @return [type]          [description]
      */
-    function updateRecords($module,$id, $records, $params);
+    function updateRecords($module, $id, $records, $params);
 
     /**
      * [upsertRecords description]
@@ -136,15 +143,15 @@ interface APIInterface
      */
     function deleteAttachment($module, $id, $attachmentId);
 
-     /**
+    /**
      * [getAllProfiles description]
      * @param  [type] $orgName       [description]
      * @param  [type] $orgId           [description]
      * @return [type]               [description]
      */
-    function getAllProfiles($orgName,$orgId);
+    function getAllProfiles($orgName, $orgId);
 
-     /**
+    /**
      * [getProfileById description]
      * @param  [type] $orgName       [description]
      * @param  [type] $orgId           [description]
@@ -153,7 +160,6 @@ interface APIInterface
      */
     function getProfileById($orgName, $orgId, $profileId);
 
-
     /**
      * [getAllUsers description]
      * @param  [type] $orgName       [description]
@@ -161,4 +167,32 @@ interface APIInterface
      * @return [type]               [description]
      */
     function getAllUsers($orgName, $orgId);
+
+    /**
+     * [createNotes description]
+     * @param  [type] $module       [description]
+     * @param  [type] $parentId          [description]
+     * @param  [type] $notes          [description]
+     * @return [type]               [description]
+     */
+    function createNotes($module, $parentId, $notes);
+
+    /**
+     * [convertRecord description]
+     *
+     * @param String    $module         Module Name
+     * @param Array     $recordId       ID of the parent record of the note
+     * @param Array     $params         Array of notes
+     * @return Array    $response
+     */
+    function convertRecord($module, $recordId, $params);
+
+    /**
+     * [deleteNote description]
+     * @param  [type] $module       [description]
+     * @param  [type] $id           [description]
+     * @param  [type] $noteId       [description]
+     * @return [type]               [description]
+     */
+    function deleteNote($module, $id, $noteId);
 }

@@ -1,3 +1,20 @@
+## [0.7.1 - (2019-12-12)](https://github.com/InterConnecta/zoho-crm/compare/0.7.0...0.7.1)
+
+### Added
+- [convert-record] Added convertRecord method ([3417b16](https://github.com/InterConnecta/zoho-crm/commit/3417b16))
+- [create-notes] Added createNotes method ([bf5a147](https://github.com/InterConnecta/zoho-crm/commit/bf5a147))
+- [get-related-lists-by-module] This function get all the related lists from a module ([8d8c891](https://github.com/InterConnecta/zoho-crm/commit/8d8c891))
+- Added deleteRecord, deleteAttachment, deleteNote methods ([3e3dabc](https://github.com/InterConnecta/zoho-crm/commit/3e3dabc))
+### Changed
+- [search-records] Updated buildCriteria method ([a3bb480](https://github.com/InterConnecta/zoho-crm/commit/a3bb480))
+
+
+## [0.7.0 - (2019-12-06)](https://github.com/InterConnecta/zoho-crm/compare/0.6.1...0.7.0)
+
+### Added
+  - [get-layouts-by-module] Added getLayoutsByModule method and its Utils ([9530e0b](https://github.com/InterConnecta/zoho-crm/commit/9530e0b))
+  - [get-fields-my-module] Added getFieldsByModule and Util method ([85f03a4](https://github.com/InterConnecta/zoho-crm/commit/85f03a4))
+
 ## [0.6.1 - (2019-11-28)](https://github.com/InterConnecta/zoho-crm/compare/0.6.0...0.6.1)
 
 ### Changed
