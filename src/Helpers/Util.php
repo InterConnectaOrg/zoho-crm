@@ -8,6 +8,7 @@ use zcrmsdk\crm\crud\ZCRMSection as Section;
 use zcrmsdk\crm\crud\ZCRMRecord as Record;
 use zcrmsdk\crm\crud\ZCRMLayout as Layout;
 use zcrmsdk\crm\crud\ZCRMField as Field;
+use zcrmsdk\crm\crud\ZCRMNote as Note;
 use zcrmsdk\crm\crud\ZCRMPermission as Permission;
 use zcrmsdk\crm\crud\ZCRMProfileCategory as ProfileCategory;
 use zcrmsdk\crm\crud\ZCRMProfileSection as ProfileSection;
@@ -25,8 +26,12 @@ trait Util
         $response = [];
 
         foreach ($records as $record) {
-            if ($record instanceof Record) {
+            if ($record instanceof Record) 
+            {
                 $response[] = self::parseRecord($record);
+            } else if ($record instanceof Note) 
+            {
+                $response[] = self::parseNote($record);
             }
         }
 
@@ -62,6 +67,49 @@ trait Util
         }
 
         return $response;
+    }
+
+    /**
+     * [parseRecord description]
+     * @param  Note $record [description]
+     * @return [type]         [description]
+     */
+    public static function parseNote(Note $record)
+    {
+        
+        $response = [
+            'id' => $record->getId(),
+            'title' => $record->getTitle(),
+            'content' => $record->getContent(),
+            'attachments' => self::getAttachmentsData($record->getAttachments()),
+            'owner' => [
+                'id' => $record->getOwner()->getId(),
+                'name' => $record->getOwner()->getName(),
+            ],
+            'createdTime' => $record->getCreatedTime(),
+            'modifiedTime' => $record->getModifiedTime(),
+            'parentModule' => $record->getParentModule(),
+            'parentName' => $record->getParentName(),
+            'parentId' => $record->getParentId(),
+        ];
+
+        return $response;
+    }
+
+    /**
+    * Get Attachments
+    * @param  Array         $attachments           Array of ZCRMAttachment instances
+    * @return Array         $response              Response in Array format
+    */  
+    public static function getAttachmentsData($attachments)
+    {
+        $attachmentsResponse = [];
+
+        foreach ($attachments as $attachment) {
+            array_push($attachmentsResponse, self::getAttachmentData($attachment));
+        }
+
+        return $attachmentsResponse;
     }
 
     /**

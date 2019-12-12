@@ -1,3 +1,9 @@
+## [0.7.2 - (2019-12-12)](https://github.com/InterConnecta/zoho-crm/compare/0.7.1...0.7.2)
+
+### Added
+  - [get-notes] Added getNotes method to API ([bf89387](https://github.com/InterConnecta/zoho-crm/commit/bf89387))
+  - [get-notes] Added Util methods for getNotes ([3781bfc](https://github.com/InterConnecta/zoho-crm/commit/3781bfc))
+
 ## [0.7.1 - (2019-12-12)](https://github.com/InterConnecta/zoho-crm/compare/0.7.0...0.7.1)
 
 ### Added

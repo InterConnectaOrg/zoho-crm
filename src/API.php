@@ -350,7 +350,7 @@ class API
      *                                  Available keys: page, perPage
      * @return Array    $response       Response in Array format
      */
-    public function getAttachments($module, $id, $params)
+    public function getAttachments($module, $id, $params = [])
     {
         try {
             $page = $params['page'] ?? 1;
@@ -364,10 +364,11 @@ class API
             //
             if ($bulkApiResponse->getData()) {
                 $zcrmAttachments = $bulkApiResponse->getData();
+                
                 $zcrmRequestInfo = $bulkApiResponse->getInfo();
-                foreach ($zcrmAttachments as $index => $zcrmAttachment) {
-                    $recordsResponse[$index] = self::getAttachmentData($zcrmAttachment);
-                }
+
+                $recordsResponse = self::getAttachmentsData($zcrmAttachments);
+
                 $infoResponse = [
                     'more_records' => $zcrmRequestInfo->getMoreRecords(),
                     'count' => $zcrmRequestInfo->getRecordCount(),
@@ -635,6 +636,51 @@ class API
                 'message' => $e->getMessage(),
                 'exception_code' => $e->getExceptionCode(),
                 'status' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * Create Notes
+     *
+     * @param String    $module         Module Name
+     * @param Array     $parentId       ID of the parent record of the note
+     * @return Array    $response
+     */
+    public function getNotes($module, $parentId, $params = [])
+    {
+        try {
+            $sortByField = isset($params['sortByField']) ? $params['sortByField'] : null;
+            $sortOrder = isset($params['sortOrder']) ? $params['sortOrder'] : null;
+            $page = isset($params['page']) ? $params['page'] : 1;
+            $perPage = isset($params['perPage']) ? $params['perPage'] : 200;
+            
+            $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module,$parentId);
+
+            $notesResponse = $zcrmRecord->getNotes($sortByField, $sortOrder, $page, $perPage);
+            
+            $records = $notesResponse->getData();
+
+            $info = $notesResponse->getInfo();
+            
+            $parsedRecords = self::parseRecords($records);
+
+            return [
+                'records' => $parsedRecords,
+                'info' => [
+                    'more_records' => $info->getMoreRecords(),
+                    'count' => $info->getRecordCount(),
+                    'page' => $info->getPageNo(),
+                    'per_page' => $info->getPerPage(),
+                ],
+            ];
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error'
             ];
         }
     }

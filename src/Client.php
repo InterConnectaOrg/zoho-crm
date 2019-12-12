@@ -193,7 +193,7 @@ class Client
      * @param  [type] $params [description]
      * @return [type]         [description]
      */
-    public function getAttachments($module, $id, $params)
+    public function getAttachments($module, $id, $params = [])
     {
         return $this->client->getAttachments($module, $id, $params);
     }
@@ -268,6 +268,18 @@ class Client
     public function getAllUsers($orgName, $orgId)
     {
         return $this->client->getAllUsers($orgName, $orgId);
+    }
+
+    /**
+     * [createNote description]
+     * @param  [type] $module       [description]
+     * @param  [type] $parentId        [description]
+     * @param  [type] $notes        [description]
+     * @return [type]               [description]
+     */
+    public function getNotes($module, $parentId, $params = [])
+    {
+        return $this->client->getNotes($module, $parentId, $params);
     }
 
     /**
