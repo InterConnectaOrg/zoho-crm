@@ -175,6 +175,15 @@ interface APIInterface
      * @param  [type] $notes          [description]
      * @return [type]               [description]
      */
+    function getNotes($module, $parentId, $params);
+
+    /**
+     * [createNotes description]
+     * @param  [type] $module       [description]
+     * @param  [type] $parentId          [description]
+     * @param  [type] $notes          [description]
+     * @return [type]               [description]
+     */
     function createNotes($module, $parentId, $notes);
 
     /**
