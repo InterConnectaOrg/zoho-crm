@@ -283,6 +283,20 @@ class Client
     }
 
     /**
+     * [UpdateNote description]
+     * @param  String $module       [description]
+     * @param  String $parentId     [description]
+     * @param  String $noteId       [description]
+     * @param  Array  $note
+     * @return [type]               [description]
+     */
+    public function updateNote($module, $parentId, $noteId, $note)
+    {
+        return $this->client->updateNote($module, $parentId, $noteId, $note);
+    }
+
+
+    /**
      * [createNote description]
      * @param  [type] $module       [description]
      * @param  [type] $parentId        [description]

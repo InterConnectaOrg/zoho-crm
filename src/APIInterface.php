@@ -187,6 +187,16 @@ interface APIInterface
     function createNotes($module, $parentId, $notes);
 
     /**
+     * [updateNote description]
+     * @param  String $module       [description]
+     * @param  String $parentId          [description]
+     * @param  String $noteId          [description]
+     * @param  Array  $note
+     * @return [type]               [description]
+     */
+    function updateNote($module, $parentId, $noteId, $note);
+
+    /**
      * [convertRecord description]
      *
      * @param String    $module         Module Name
