@@ -6,6 +6,7 @@ use zcrmsdk\crm\setup\restclient\ZCRMRestClient as RESTClient;
 
 use zcrmsdk\crm\crud\ZCRMModule as Module;
 use zcrmsdk\crm\crud\ZCRMRecord as Record;
+use zcrmsdk\crm\crud\ZCRMNote as Note;
 
 use zcrmsdk\crm\setup\users\ZCRMUser as User;
 use zcrmsdk\crm\exception\ZCRMException;
@@ -708,6 +709,39 @@ class API
                 array_push($createdNotes,$apiResponse->getDetails());
             }
             return $createdNotes;
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error'
+            ];
+        }
+    }
+
+     /**
+     * Update Note
+     *
+     * @param String    $module         Module Name
+     * @param String    $parentId       ID of the parent record of the note
+     * @param String    $noteId         ID of the Note
+     * @param Array     $note           Array of note
+     * @return Array    $response
+     */
+    public function updateNote($module, $parentId, $noteId, $note)
+    {
+        try {
+
+            $updateNote = [];
+            $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module,$parentId);
+            $noteIns = Note::getInstance($zcrmRecord,$noteId);
+            $noteIns->setTitle($note['title']);
+            $noteIns->setContent($note['content']);
+            $responseIns = $zcrmRecord->updateNote($noteIns);
+            array_push($updateNote,$responseIns->getDetails());
+            
+            return $updateNote;
         } catch (ZCRMException $e) {
             return [
                 'http_code' => $e->getCode(),
