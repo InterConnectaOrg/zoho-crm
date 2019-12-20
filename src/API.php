@@ -288,9 +288,9 @@ class API
         $fileResponseIns = $record->downloadAttachment($attachmentId);
         $fileName = $fileResponseIns->getFileName();
         $fileContent = $fileResponseIns->getFileContent();
-        Storage::put($fileName, $fileContent);
+        \Storage::put($fileName, $fileContent);
         $pathToFile = storage_path('app/'.$fileName);
-            return response()->download($pathToFile)->deleteFileAfterSend();
+            return response()->download($pathToFile)->deleteFileAfterSend(true);
 
         } catch (ZCRMException $e) {
             return [
