@@ -274,6 +274,34 @@ class API
         }
     }
 
+     /**
+     * [downloadAttachment description]
+     * @param  String $module       [description]
+     * @param  String $id           [description]
+     * @param  String $attachmentId [description]
+     * @return [type]               [description]
+     */
+    public function downloadAttachment($module, $id, $attachmentId)
+    {
+        try{
+        $record = $this->restClient->getInstance()->getRecordInstance($module , $id);
+        $fileResponseIns = $record->downloadAttachment($attachmentId);
+        $fileName = $fileResponseIns->getFileName();
+        $fileContent = $fileResponseIns->getFileContent();
+        Storage::put($fileName, $fileContent);
+        $pathToFile = storage_path('app/'.$fileName);
+            return response()->download($pathToFile)->deleteFileAfterSend();
+
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
     /**
      * Get Record By Id
      *
