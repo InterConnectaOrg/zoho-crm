@@ -6,6 +6,7 @@ use zcrmsdk\crm\setup\restclient\ZCRMRestClient as RESTClient;
 
 use zcrmsdk\crm\crud\ZCRMModule as Module;
 use zcrmsdk\crm\crud\ZCRMRecord as Record;
+use zcrmsdk\crm\crud\ZCRMNote as Note;
 
 use zcrmsdk\crm\setup\users\ZCRMUser as User;
 use zcrmsdk\crm\exception\ZCRMException;
@@ -273,6 +274,34 @@ class API
         }
     }
 
+     /**
+     * [downloadAttachment description]
+     * @param  String $module       [description]
+     * @param  String $id           [description]
+     * @param  String $attachmentId [description]
+     * @return [type]               [description]
+     */
+    public function downloadAttachment($module, $id, $attachmentId)
+    {
+        try{
+        $record = $this->restClient->getInstance()->getRecordInstance($module , $id);
+        $fileResponseIns = $record->downloadAttachment($attachmentId);
+        $fileName = $fileResponseIns->getFileName();
+        $fileContent = $fileResponseIns->getFileContent();
+        \Storage::put($fileName, $fileContent);
+        $pathToFile = storage_path('app/'.$fileName);
+        return response()->download($pathToFile)->deleteFileAfterSend(true);
+
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+    }
     /**
      * Get Record By Id
      *
@@ -364,9 +393,7 @@ class API
             //
             if ($bulkApiResponse->getData()) {
                 $zcrmAttachments = $bulkApiResponse->getData();
-                
                 $zcrmRequestInfo = $bulkApiResponse->getInfo();
-
                 $recordsResponse = self::getAttachmentsData($zcrmAttachments);
 
                 $infoResponse = [
@@ -550,19 +577,16 @@ class API
      * @param String     $id           ID of record
      * @return Array    $records        Response in Array format
      */
-    public function updateRecord($module, $id, $record)
+    public function updateRecord($module, $id, $record, $trigger = [])
     {
-
         try {
+            $zcrmRecord = $this->restClient->getRecordInstance($module, $id);
+            foreach ($record as $key => $value) {
+                $zcrmRecord->setFieldValue($key, $value);
+            }
+            $apiResponse = $zcrmRecord->update($trigger);
+            return $apiResponse->getDetails();
 
-            $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module, $id);
-            $zcrmRecord->setFieldValue($record);
-            $apiResponse = $zcrmRecord->update();
-            $records = json_encode($apiResponse->getDetails());
-
-            return [
-                'records' => $records
-            ];
         } catch (ZCRMException $e) {
             return [
                 'http_code' => $e->getCode(),
@@ -654,15 +678,11 @@ class API
             $sortOrder = isset($params['sortOrder']) ? $params['sortOrder'] : null;
             $page = isset($params['page']) ? $params['page'] : 1;
             $perPage = isset($params['perPage']) ? $params['perPage'] : 200;
-            
             $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module,$parentId);
 
             $notesResponse = $zcrmRecord->getNotes($sortByField, $sortOrder, $page, $perPage);
-            
             $records = $notesResponse->getData();
-
             $info = $notesResponse->getInfo();
-            
             $parsedRecords = self::parseRecords($records);
 
             return [
@@ -708,6 +728,39 @@ class API
                 array_push($createdNotes,$apiResponse->getDetails());
             }
             return $createdNotes;
+        } catch (ZCRMException $e) {
+            return [
+                'http_code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'code' => $e->getExceptionCode(),
+                'status' => 'error'
+            ];
+        }
+    }
+
+     /**
+     * Update Note
+     *
+     * @param String    $module         Module Name
+     * @param String    $parentId       ID of the parent record of the note
+     * @param String    $noteId         ID of the Note
+     * @param Array     $note           Array of note
+     * @return Array    $response
+     */
+    public function updateNote($module, $parentId, $noteId, $note)
+    {
+        try {
+
+            $updateNote = [];
+            $zcrmRecord = $this->restClient->getInstance()->getRecordInstance($module,$parentId);
+            $noteIns = Note::getInstance($zcrmRecord,$noteId);
+            $noteIns->setTitle($note['title']);
+            $noteIns->setContent($note['content']);
+            $responseIns = $zcrmRecord->updateNote($noteIns);
+            array_push($updateNote,$responseIns->getDetails());
+
+            return $updateNote;
         } catch (ZCRMException $e) {
             return [
                 'http_code' => $e->getCode(),
@@ -864,11 +917,11 @@ class API
             ];
         }
     }
-    
+
     /**
      * Get Related Lists By Module
      *
-     * @param String    $module         Module Name                                
+     * @param String    $module         Module Name
      */
     function getRelatedListsByModule($module){
         try {
@@ -899,7 +952,7 @@ class API
                     'records' => $arrLists
                 ];
             }
-           
+
         } catch (ZCRMException $e) {
             return [
                 'http_code' => $e->getCode(),

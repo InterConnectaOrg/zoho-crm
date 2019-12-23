@@ -170,9 +170,9 @@ class Client
      * @param  [type] $record [description]
      * @return [type]         [description]
      */
-    public function updateRecord($module, $id, $record)
+    public function updateRecord($module, $id, $record, $trigger = [])
     {
-        return $this->client->updateRecord($module, $id, $record);
+        return $this->client->updateRecord($module, $id, $record, $trigger);
     }
 
     /**
@@ -281,6 +281,20 @@ class Client
     {
         return $this->client->getNotes($module, $parentId, $params);
     }
+
+    /**
+     * [UpdateNote description]
+     * @param  String $module       [description]
+     * @param  String $parentId     [description]
+     * @param  String $noteId       [description]
+     * @param  Array  $note
+     * @return [type]               [description]
+     */
+    public function updateNote($module, $parentId, $noteId, $note)
+    {
+        return $this->client->updateNote($module, $parentId, $noteId, $note);
+    }
+
 
     /**
      * [createNote description]
