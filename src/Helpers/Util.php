@@ -26,10 +26,10 @@ trait Util
         $response = [];
 
         foreach ($records as $record) {
-            if ($record instanceof Record) 
+            if ($record instanceof Record)
             {
                 $response[] = self::parseRecord($record);
-            } else if ($record instanceof Note) 
+            } else if ($record instanceof Note)
             {
                 $response[] = self::parseNote($record);
             }
@@ -48,8 +48,8 @@ trait Util
         $response = [];
 
         $response['id'] = $record->getEntityId();
-        $response['owner'] = $record->getOwner()->getId();
-        $response['createdTime'] = $record->getCreatedTime();
+        $response['Owner'] = $record->getOwner()->getId();
+        $response['Created_Time'] = $record->getCreatedTime();
         $fields = $record->getData();
         if ($record->getLineItems()) {
             $response['Product_Details'] = self::getLineItems($record->getLineItems());
@@ -76,7 +76,7 @@ trait Util
      */
     public static function parseNote(Note $record)
     {
-        
+
         $response = [
             'id' => $record->getId(),
             'title' => $record->getTitle(),
@@ -100,7 +100,7 @@ trait Util
     * Get Attachments
     * @param  Array         $attachments           Array of ZCRMAttachment instances
     * @return Array         $response              Response in Array format
-    */  
+    */
     public static function getAttachmentsData($attachments)
     {
         $attachmentsResponse = [];
@@ -161,7 +161,7 @@ trait Util
             })
             ->all();
 
-        return '(' . implode((isset($criteriaPatternMap['operator'])) ? $criteriaPatternMap['operator'] : '', $criteriaPatternArray) . ')'; 
+        return '(' . implode((isset($criteriaPatternMap['operator'])) ? $criteriaPatternMap['operator'] : '', $criteriaPatternArray) . ')';
     }
 
     /**
@@ -181,7 +181,7 @@ trait Util
     /**
      * Get Attachment Data
      * @param  Attachment    $zcrmAttachment        Attachment Object
-     * @return Array         $response              Response in Array format   
+     * @return Array         $response              Response in Array format
      */
     public static function getAttachmentData(Attachment $zcrmAttachment)
     {
@@ -221,8 +221,8 @@ trait Util
 
     /**
      * Get Profiles Data
-     * @param  zcrmProfile    $zcrmProfile       
-     * @return Array         $response              Response in Array format   
+     * @param  zcrmProfile    $zcrmProfile
+     * @return Array         $response              Response in Array format
      */
     public static function getProfilesData(Profile $zcrmProfile)
     {
@@ -264,8 +264,8 @@ trait Util
 
     /**
      * Get Permission List
-     * @param  permissionsList    $permissionsList       
-     * @return Array         $response              Response in Array format   
+     * @param  permissionsList    $permissionsList
+     * @return Array         $response              Response in Array format
      */
 
     public static function getPermissionList(Permission $permissionsList)
@@ -284,8 +284,8 @@ trait Util
 
     /**
      * Get Sections List
-     * @param  profileSection    $profileSection       
-     * @return Array         $response              Response in Array format   
+     * @param  profileSection    $profileSection
+     * @return Array         $response              Response in Array format
      */
     public static function getSectionsList(ProfileSection $profileSection)
     {
@@ -303,8 +303,8 @@ trait Util
 
     /**
      * Get Profile Category
-     * @param  profileCategory    $profileCategory       
-     * @return Array            $response              Response in Array format   
+     * @param  profileCategory    $profileCategory
+     * @return Array            $response              Response in Array format
      */
     public static function getProfileCategory(ProfileCategory $profileCategory)
     {
@@ -317,9 +317,9 @@ trait Util
         return $response;
     }
     /**
-     * Handle Users 
-     * @param  [type]    $userInstance       
-     * @return Array                      Response in Array format   
+     * Handle Users
+     * @param  [type]    $userInstance
+     * @return Array                      Response in Array format
      */
     public static function handleUserResponse($userInstance)
     {
