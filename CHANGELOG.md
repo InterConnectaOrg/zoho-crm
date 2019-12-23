@@ -1,3 +1,9 @@
+## [0.7.4 - (2019-12-23)](https://github.com/InterConnecta/zoho-crm/compare/0.7.3...0.7.4)
+
+### Fixed
+  - [0.7.4] Fix default keys on parseRecord ([ce14b74](https://github.com/InterConnecta/zoho-crm/commit/ce14b74))
+
+
 ## [0.7.3 - (2019-12-23)](https://github.com/InterConnecta/zoho-crm/compare/0.7.2...0.7.3)
 
 ### Added
