@@ -170,9 +170,9 @@ class Client
      * @param  [type] $record [description]
      * @return [type]         [description]
      */
-    public function updateRecord($module, $id, $record)
+    public function updateRecord($module, $id, $record, $trigger = [])
     {
-        return $this->client->updateRecord($module, $id, $record);
+        return $this->client->updateRecord($module, $id, $record, $trigger);
     }
 
     /**
