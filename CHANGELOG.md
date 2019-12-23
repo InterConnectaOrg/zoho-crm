@@ -1,3 +1,13 @@
+## [0.7.3 - (2019-12-23)](https://github.com/InterConnecta/zoho-crm/compare/0.7.2...0.7.3)
+
+### Added
+  - download attachment fix ([ef3fc3b](https://github.com/InterConnecta/zoho-crm/commit/ef3fc3b))
+  - [download-attachment] The method was added ([5429446](https://github.com/InterConnecta/zoho-crm/commit/5429446))
+  - Update Note Method ([6b9355e](https://github.com/InterConnecta/zoho-crm/commit/6b9355e))
+### Fixed
+  - [update-record] Improve Update record method for single record ([06e02e8](https://github.com/InterConnecta/zoho-crm/commit/06e02e8))
+
+
 ## [0.7.2 - (2019-12-12)](https://github.com/InterConnecta/zoho-crm/compare/0.7.1...0.7.2)
 
 ### Added
