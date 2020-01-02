@@ -1,3 +1,9 @@
+## [0.7.5 - (2020-01-02)](https://github.com/InterConnecta/zoho-crm/compare/0.7.4...0.7.5)
+
+### Changed
+  - [0.7.5] Upgrade zohocrm sdk to 2.0.6 ([4bb225f](https://github.com/InterConnecta/zoho-crm/commit/4bb225f))
+
+
 ## [0.7.4 - (2019-12-23)](https://github.com/InterConnecta/zoho-crm/compare/0.7.3...0.7.4)
 
 ### Fixed
