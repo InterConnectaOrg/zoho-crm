@@ -114,6 +114,48 @@ class API
     }
 
     /**
+     * [upsertRecords description]
+     * @param  String $module  Module Name
+     * @param  Array $records  Array of records
+     * @return Array          [description]
+     */
+    public function upsertRecords($module, $records)
+    {
+
+        try {
+            $responseRecords = [];
+            $zcrmRecords = [];
+            foreach ($records as $record) {
+                $zcrmRecord = Record::getInstance($module, null);
+                foreach ($record as $key => $value) {
+                    $zcrmRecord->setFieldValue($key, $value);
+                }
+                array_push($zcrmRecords, $zcrmRecord);
+            }
+
+            $moduleInstance = $this->restClient->getModuleInstance($module);
+
+            $bulkApiResponse = $moduleInstance->upsertRecords($zcrmRecords);
+
+            $entityResponses = $bulkApiResponse->getEntityResponses();
+            foreach ($entityResponses as $entityResponse) {
+                array_push($responseRecords, $entityResponse->getResponseJSON());
+            }
+            return $responseRecords;
+
+        } catch (ZCRMException $e) {
+            return [
+                'code' => $e->getCode(),
+                'details' => $e->getExceptionDetails(),
+                'message' => $e->getMessage(),
+                'exception_code' => $e->getExceptionCode(),
+                'status' => 'error',
+            ];
+        }
+
+    }
+
+    /**
      * Delete Records by Ids
      *
      * @param String    $module         Module Name
@@ -964,3 +1006,5 @@ class API
         }
     }
 }
+
+
