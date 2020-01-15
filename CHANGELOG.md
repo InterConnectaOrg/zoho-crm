@@ -1,13 +1,21 @@
+## [0.8.0 - (2020-01-15)](https://github.com/InterConnecta/zoho-crm/compare/0.7.5...0.8.0)
+
+### Added
+- [upsert-records] Added `upsert`. method. ([1b45265](https://github.com/InterConnecta/zoho-crm/commit/1b45265))
+### Changed
+- [owner-info] Map `name` and `id` of Owner not only `id`. ([b2bc3b1](https://github.com/InterConnecta/zoho-crm/commit/b2bc3b1))
+
+
 ## [0.7.5 - (2020-01-02)](https://github.com/InterConnecta/zoho-crm/compare/0.7.4...0.7.5)
 
 ### Changed
-  - [0.7.5] Upgrade zohocrm sdk to 2.0.6 ([4bb225f](https://github.com/InterConnecta/zoho-crm/commit/4bb225f))
+  - [0.7.5] Upgrade zohocrm sdk to `2.0.6`. ([4bb225f](https://github.com/InterConnecta/zoho-crm/commit/4bb225f))
 
 
 ## [0.7.4 - (2019-12-23)](https://github.com/InterConnecta/zoho-crm/compare/0.7.3...0.7.4)
 
 ### Fixed
-  - [0.7.4] Fix default keys on parseRecord ([ce14b74](https://github.com/InterConnecta/zoho-crm/commit/ce14b74))
+  - [0.7.4] Fix default keys on `parseRecord`. ([ce14b74](https://github.com/InterConnecta/zoho-crm/commit/ce14b74))
 
 
 ## [0.7.3 - (2019-12-23)](https://github.com/InterConnecta/zoho-crm/compare/0.7.2...0.7.3)
