@@ -48,7 +48,10 @@ trait Util
         $response = [];
 
         $response['id'] = $record->getEntityId();
-        $response['Owner'] = $record->getOwner()->getId();
+        $response['Owner'] = [
+            'id' => $record->getOwner()->getId(),
+            'name' => $record->getOwner()->getName()
+        ];
         $response['Created_Time'] = $record->getCreatedTime();
         $fields = $record->getData();
         if ($record->getLineItems()) {
