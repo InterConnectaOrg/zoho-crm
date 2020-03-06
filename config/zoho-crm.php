@@ -133,4 +133,8 @@ return [
     */
 
     'persistence_handler_class' =>  env('ZOHO_CRM_PERSISTENCE_HANDLER_CLASS', 'ZohoOAuthPersistenceHandler'),
+    
+    'package_name' => 'zoho-crm',
+
+    'package_label' => 'Zoho CRM',
 ];

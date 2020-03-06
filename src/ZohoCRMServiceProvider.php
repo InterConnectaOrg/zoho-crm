@@ -31,13 +31,19 @@ class ZohoCRMServiceProvider extends ServiceProvider
      */
     private function registerPublishing()
     {
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'interconnecta/zoho-crm');
+        
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/Storage/oauth' => storage_path('app/zoho/crm/oauth'),
             ], 'zoho-crm-oauth');
+
             $this->publishes([
                 __DIR__.'/../config/zoho-crm.php' => config_path('zoho-crm.php'),
             ], 'zoho-crm-config');
+
         }
     }
 
