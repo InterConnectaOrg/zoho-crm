@@ -22,8 +22,6 @@ class InstallCommand extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -31,7 +29,8 @@ class InstallCommand extends Command
     }
 
     /**
-     * [FunctionName description]
+     * [FunctionName description].
+     *
      * @param string $value [description]
      */
     public function handle()
@@ -42,10 +41,10 @@ class InstallCommand extends Command
         // $this->comment('Publishing Zoho CRM Configuration ...');
         // $this->callSilent('vendor:publish', ['--tag' => 'zoho-crm-config']);
 
-        $this->comment('Instaliing Zoho CRM Wrapper ...');
+        $this->comment('Installing Zoho CRM Wrapper ...');
 
         $this->call('vendor:publish', [
-            '--provider' => 'Zoho\\CRM\\ZohoCRMServiceProvider'
+            '--provider' => 'Zoho\\CRM\\ZohoCRMServiceProvider',
         ]);
 
         $this->info('Zoho CRM scaffolding installed successfully.');

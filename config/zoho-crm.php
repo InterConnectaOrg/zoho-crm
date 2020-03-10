@@ -1,6 +1,16 @@
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | title
+    |--------------------------------------------------------------------------
+    |
+    | description
+    |
+    */
+
+    'client_id' => env('ZOHO_CRM_CLIENT_ID', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -11,7 +21,7 @@ return [
     |
     */
 
-    'client_id' =>  env('ZOHO_CRM_CLIENT_ID', null),
+    'client_secret' => env('ZOHO_CRM_CLIENT_SECRET', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +32,7 @@ return [
     |
     */
 
-    'client_secret' =>  env('ZOHO_CRM_CLIENT_SECRET', null),
+    'redirect_uri' => env('ZOHO_CRM_REDIRECT_URI', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -33,7 +43,7 @@ return [
     |
     */
 
-    'redirect_uri' =>  env('ZOHO_CRM_REDIRECT_URI', null),
+    'current_user_email' => env('ZOHO_CRM_CURRENT_USER_EMAIL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -44,7 +54,7 @@ return [
     |
     */
 
-    'current_user_email' =>  env('ZOHO_CRM_CURRENT_USER_EMAIL', null),
+    'application_log_file_path' => storage_path('app/zoho/crm/oauth/logs'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +65,7 @@ return [
     |
     */
 
-    'application_log_file_path' =>  storage_path('app/zoho/crm/oauth/logs'),
+    'token_persistence_path' => storage_path('app/zoho/crm/oauth/tokens'),
 
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +76,7 @@ return [
     |
     */
 
-    'token_persistence_path' =>  storage_path('app/zoho/crm/oauth/tokens'),
+    'accounts_url' => env('ZOHO_CRM_ACCOUNTS_URL', 'https://accounts.zoho.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -77,7 +87,7 @@ return [
     |
     */
 
-    'accounts_url' =>  env('ZOHO_CRM_ACCOUNTS_URL', 'https://accounts.zoho.com'),
+    'sandbox' => env('ZOHO_CRM_SANDBOX', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -88,7 +98,7 @@ return [
     |
     */
 
-    'sandbox' =>  env('ZOHO_CRM_SANDBOX', false),
+    'api_base_url' => env('ZOHO_CRM_API_BASE_URL', 'www.zohoapis.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -99,7 +109,7 @@ return [
     |
     */
 
-    'api_base_url' =>  env('ZOHO_CRM_API_BASE_URL', 'www.zohoapis.com'),
+    'api_version' => env('ZOHO_CRM_API_VERSION', 'v2'),
 
     /*
     |--------------------------------------------------------------------------
@@ -110,7 +120,7 @@ return [
     |
     */
 
-    'api_version' =>  env('ZOHO_CRM_API_VERSION', 'v2'),
+    'access_type' => env('ZOHO_CRM_ACCESS_TYPE', 'offline'),
 
     /*
     |--------------------------------------------------------------------------
@@ -121,20 +131,27 @@ return [
     |
     */
 
-    'access_type' =>  env('ZOHO_CRM_ACCESS_TYPE', 'offline'),
+    'persistence_handler_class' => env('ZOHO_CRM_PERSISTENCE_HANDLER_CLASS', 'ZohoOAuthPersistenceHandler'),
 
     /*
     |--------------------------------------------------------------------------
-    | title
+    | Package Name
     |--------------------------------------------------------------------------
     |
-    | description
+    | Custom Attribute to be used by Connect Manager package.
     |
     */
 
-    'persistence_handler_class' =>  env('ZOHO_CRM_PERSISTENCE_HANDLER_CLASS', 'ZohoOAuthPersistenceHandler'),
-    
     'package_name' => 'zoho-crm',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Package Lbel
+    |--------------------------------------------------------------------------
+    |
+    | Custom Attribute to be used by Connect Manager package.
+    |
+    */
 
     'package_label' => 'Zoho CRM',
 ];
