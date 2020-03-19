@@ -7,7 +7,7 @@
 			<div class="container-fluid">
 				<div class="row mb-2">
 					<div class="col-sm-6">
-						<h1 class="m-0 text-dark">Property Uploader</h1>
+						<h1 class="m-0 text-dark">Zoho CRM Wrapper</h1>
 					</div><!-- /.col -->
 					<div class="col-sm-6">
 						<ol class="breadcrumb float-sm-right">
@@ -42,58 +42,63 @@
 							</div>
 						</div>
 					</div>
-					<div class="card-body">
-						<h5>Zoho OAuth2 Connection</h5>
-						<div class="form-group">
-							<label for="exampleInputFile">Client ID</label>
-							<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fas fa-key"></i></span>
+					<form action="/zoho-crm/save" method="post">
+						<div class="card-body">
+							<h5>Zoho OAuth2 Connection</h5>
+							<div class="form-group">
+								<label for="exampleInputFile">Client ID</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fas fa-key"></i></span>
+									</div>
+									<input type="text" class="form-control" id="clientid" name="clientid"
+										placeholder="XXXXXXXXXXX">
 								</div>
-								<input type="text" class="form-control" placeholder="XXXXXXXXXXX">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputFile">Client Secret</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fas fa-key"></i></span>
+									</div>
+									<input type="text" class="form-control" id="clientsecret" name="clientsecret"
+										placeholder="XXXXXXXXXXX">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputFile">Authorized Redirect URI</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fas fa-check"></i></span>
+									</div>
+									<input type="text" class="form-control" id="redirecturi" name="redirecturi"
+										value="">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputFile">Access Type</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fas fa-check"></i></span>
+									</div>
+									<input type="text" class="form-control" value="online" id="accesstype"
+										name="accesstype">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputFile">Scope</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fas fa-check"></i></span>
+									</div>
+									<input type="text" class="form-control" value="" id="scope" name="scope">
+								</div>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="exampleInputFile">Client Secret</label>
-							<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fas fa-key"></i></span>
-								</div>
-								<input type="text" class="form-control" placeholder="XXXXXXXXXXX">
-							</div>
+						<div class="card-footer">
+							<button type="submit" class="btn btn-primary float-right">Save</button>
 						</div>
-						<div class="form-group">
-							<label for="exampleInputFile">Authorized Redirect URI</label>
-							<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fas fa-check"></i></span>
-								</div>
-								<input type="text" class="form-control"
-									value="https://customer.toolbox.interconnecta.com/zoho-auth/">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="exampleInputFile">Client Type</label>
-							<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fas fa-check"></i></span>
-								</div>
-								<input type="text" class="form-control" value="Web">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="exampleInputFile">Scope</label>
-							<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fas fa-check"></i></span>
-								</div>
-								<input type="text" class="form-control" value="ZohoProfile.ALL">
-							</div>
-						</div>
-					</div>
-					<div class="card-footer">
-						<button type="submit" class="btn btn-primary float-right">Save</button>
-					</div>
+					</form>
 				</div><!-- /.card -->
 			</div>
 		</div>
