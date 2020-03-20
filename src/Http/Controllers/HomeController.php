@@ -3,9 +3,14 @@
 namespace Zoho\CRM\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+    }
+
     public function index(Request $request)
     {
         /*
@@ -16,8 +21,8 @@ class HomeController extends Controller
             &
         */
 
-        if ($request->get('code') && $request->get('location')) {
-            $code = $request->get('code');
+        if ($request->has('code', 'location')) {
+            Cache::add('granttoken', $request->query('code'));
 
             $this->saveTokens();
         } else {
@@ -27,11 +32,21 @@ class HomeController extends Controller
 
     public function store(Request $request)
     {
-        $clientId = $request->get('clientid');
-        $clientSecret = $request->get('clientsecret');
-        $redirectUri = $request->get('redirecturi');
-        $accessType = $request->get('accesstype');
-        $scope = $request->get('scope');
+        if (!file_exists(base_path('.env'))) {
+            return response('Please, create an environment file before setting up the connection.', 404);
+        }
+
+        $clientId = $request->input('clientid');
+        $clientSecret = $request->input('clientsecret');
+        $redirectUri = $request->input('redirecturi');
+        $accessType = $request->input('accesstype');
+        $scope = $request->input('scope');
+        $email = $request->input('email');
+
+        Cache::add('clientid', $clientId);
+        Cache::add('clientsecret', $clientSecret);
+        Cache::add('redirecturi', $redirectUri);
+        Cache::add('email', $email);
 
         $requestGrantToken = 'https://accounts.zoho.com/oauth/v2/auth?'
                         .'scope='.$scope
@@ -40,14 +55,54 @@ class HomeController extends Controller
                         .'&access_type='.$accessType
                         .'&redirect_uri='.$redirectUri;
 
-        // Temporarily Store request values in Storage.
-
         return redirect($requestGrantToken);
     }
 
     protected function saveTokens()
     {
-        // Since we know the Grant Token (code) is valid,
-        // Save values in .env file.
+        // Given the Grant Token (code) is valid
+
+        // Then Save keys in .env file
+
+        $credentials = [
+            'clientid' => 'ZOHO_CRM_CLIENT_ID',
+            'clientsecret' => 'ZOHO_CRM_CLIENT_SECRET',
+            'redirecturi' => 'ZOHO_CRM_REDIRECT_URI',
+            'email' => 'ZOHO_CRM_CURRENT_USER_EMAIL',
+            'granttoken' => 'ZOHO_CRM_GRANT_TOKEN',
+        ];
+
+        $envFile = file_get_contents(base_path('.env'));
+
+        foreach ($credentials as $key => $value) {
+            $cachedValue = Cache::pull($key, '');
+
+            if ($this->keyInFile($envFile, $value)) {
+                // If found key, replace value
+                $envFile = preg_replace("/^{$value}=.*/m", $value.'='.$cachedValue, $envFile);
+            } else {
+                // if key is not found, add key and value
+                $envFile = $envFile.PHP_EOL."{$value}={$cachedValue}";
+            }
+        }
+
+        file_put_contents(base_path('.env'), $envFile);
+    }
+
+    /**
+     * Search a String in File.
+     *
+     * @param string $search
+     * @param string $file
+     *
+     * @return bool
+     */
+    protected function keyInFile($file, $search)
+    {
+        if (strpos($file, $search)) {
+            return true;
+        }
+
+        return false;
     }
 }

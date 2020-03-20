@@ -71,8 +71,16 @@
 									<div class="input-group-prepend">
 										<span class="input-group-text"><i class="fas fa-check"></i></span>
 									</div>
-									<input type="text" class="form-control" id="redirecturi" name="redirecturi"
-										value="">
+									<input type="text" class="form-control" id="redirecturi" name="redirecturi">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputFile">User Email</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fas fa-check"></i></span>
+									</div>
+									<input type="email" class="form-control" id="email" name="email">
 								</div>
 							</div>
 							<div class="form-group">
