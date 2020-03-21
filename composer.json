@@ -1,6 +1,10 @@
 {
     "name": "interconnecta/zoho-crm",
-    "keywords": ["zoho", "crm", "laravel"],
+    "keywords": [
+        "zoho",
+        "crm",
+        "laravel"
+    ],
     "license": "MIT",
     "authors": [
         {

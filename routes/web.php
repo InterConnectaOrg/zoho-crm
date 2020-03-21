@@ -7,4 +7,5 @@ Route::get('zoho-crm', function () {
 Route::namespace('Zoho\CRM\Http\Controllers')->group(function () {
     Route::post('zoho-crm/save', 'HomeController@store');
     Route::get('zoho-crm/oauthredirect', 'HomeController@index');
+    Route::get('zoho-crm/edit', 'HomeController@edit');
 });

@@ -1,7 +1,8 @@
 @extends('interconnecta/connect-ui::layout.default')
 
 @section('body')
-<div class="content">
+<div class="content" id="zoho-crm">
+	<example-component></example-component>
 	<div class="container-fluid">
 		<div class="content-header">
 			<div class="container-fluid">
