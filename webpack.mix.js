@@ -11,5 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js/vendor/zoho-crm')
-	.sass('resources/sass/app.scss', 'public/css/vendor/zoho-crm');
+mix.setPublicPath('public')
+	.js('resources/js/app.js', 'public')
+	.sass('resources/sass/app.scss', 'public')
+	.version();

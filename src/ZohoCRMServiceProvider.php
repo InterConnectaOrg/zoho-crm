@@ -4,7 +4,6 @@ namespace Zoho\CRM;
 
 use Illuminate\Support\ServiceProvider;
 
-
 class ZohoCRMServiceProvider extends ServiceProvider
 {
     /**
@@ -16,8 +15,6 @@ class ZohoCRMServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -25,37 +22,13 @@ class ZohoCRMServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the package's publishable resources.
-     *
-     * @return void
-     */
-    private function registerPublishing()
-    {
-        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'interconnecta/zoho-crm');
-        
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/Storage/oauth' => storage_path('app/zoho/crm/oauth'),
-            ], 'zoho-crm-oauth');
-
-            $this->publishes([
-                __DIR__.'/../config/zoho-crm.php' => config_path('zoho-crm.php'),
-            ], 'zoho-crm-config');
-
-        }
-    }
-
-    /**
      * Register the application services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/zoho-crm.php', 'zoho-crm'
+            __DIR__.'/../config/zoho-crm.php',
+            'zoho-crm'
         );
 
         $this->commands([
@@ -68,5 +41,29 @@ class ZohoCRMServiceProvider extends ServiceProvider
         });
 
         $this->app->alias('zohocrm', Client::class);
+    }
+
+    /**
+     * Register the package's publishable resources.
+     */
+    private function registerPublishing()
+    {
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'interconnecta/zoho-crm');
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/Storage/oauth' => storage_path('app/zoho/crm/oauth'),
+            ], 'zoho-crm-oauth');
+
+            $this->publishes([
+                __DIR__.'/../config/zoho-crm.php' => config_path('zoho-crm.php'),
+            ], 'zoho-crm-config');
+
+            $this->publishes([
+                __DIR__.'/../public' => public_path('vendor/zoho-crm'),
+            ], 'zoho-crm-assets');
+        }
     }
 }
