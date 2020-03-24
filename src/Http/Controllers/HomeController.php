@@ -4,36 +4,38 @@ namespace Zoho\CRM\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Zoho\CRM\ZohoCRM;
 
 class HomeController extends Controller
 {
-    public function __construct()
-    {
-    }
-
     public function index(Request $request)
     {
-        /*
-            http://interconnecta-connect.test/?
-            code=1000.1179a48a30d5dc8b14b76cf2901c5a70.7d272a079796779c17dc51d0503174e1
-            &location=us
-            &accounts-server=https%3A%2F%2Faccounts.zoho.com
-            &
-        */
+        // return view('interconnecta/zoho-crm::index');
+        return view('interconnecta/zoho-crm::connect', ['zohoCRMJsVariables' => ZohoCRM::jsVariables()]);
+    }
 
-        if ($request->has('code', 'location')) {
-            Cache::add('granttoken', $request->query('code'));
+    public function redirectHandler(Request $request)
+    {
+        Cache::add('granttoken', $request->input('code'));
 
-            $this->saveTokens();
-        } else {
-            abort(403, 'Invalid URL');
-        }
+        $this->saveSecrets();
+
+        $credentials = [
+            'clientid' => Cache::pull('clientid'),
+            'clientsecret' => Cache::pull('clientsecret'),
+            'redirecturi' => Cache::pull('redirecturi'),
+            'email' => Cache::pull('email'),
+        ];
+
+        Cache::pull('granttoken');
+
+        return response($credentials, 200);
     }
 
     public function store(Request $request)
     {
         if (!file_exists(base_path('.env'))) {
-            return response('Please, create an environment file before setting up the connection.', 404);
+            return response('Please, create a default environment file before setting up the connection.', 404);
         }
 
         $clientId = $request->input('clientid');
@@ -48,17 +50,10 @@ class HomeController extends Controller
         Cache::add('redirecturi', $redirectUri);
         Cache::add('email', $email);
 
-        $requestGrantToken = 'https://accounts.zoho.com/oauth/v2/auth?'
-                        .'scope='.$scope
-                        .'&client_id='.$clientId
-                        .'&response_type=code'
-                        .'&access_type='.$accessType
-                        .'&redirect_uri='.$redirectUri;
-
-        return redirect($requestGrantToken);
+        return response('Secrets were saved in cache successfully');
     }
 
-    protected function saveTokens()
+    protected function saveSecrets()
     {
         // Given the Grant Token (code) is valid
 
@@ -75,7 +70,7 @@ class HomeController extends Controller
         $envFile = file_get_contents(base_path('.env'));
 
         foreach ($credentials as $key => $value) {
-            $cachedValue = Cache::pull($key, '');
+            $cachedValue = Cache::get($key, '');
 
             if ($this->keyInFile($envFile, $value)) {
                 // If found key, replace value
@@ -87,6 +82,8 @@ class HomeController extends Controller
         }
 
         file_put_contents(base_path('.env'), $envFile);
+
+        // $this->initializeZohoCRM();
     }
 
     /**
