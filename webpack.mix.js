@@ -34,3 +34,5 @@ mix.browserSync('interconnecta-connect.test');
 if (mix.inProduction()) {
 	mix.version();
 }
+
+mix.copy('resources/img', 'public/img');
