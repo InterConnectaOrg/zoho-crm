@@ -6,13 +6,11 @@ class ZohoCRM
 {
     public static function jsVariables()
     {
-        // return [
-        //     'path' => config('zoho-crm.path', ''),
-        // ];
         return [
-            // app/zoho-crm or /zoho-crm (relative to URL)
+            // Relative to current URL
             'webPath' => request()->route()->getPrefix(),
-            // zoho-crm (always relative to package)
+
+            // Always Relative to Package
             'apiPath' => config('zoho-crm.path', ''),
         ];
     }

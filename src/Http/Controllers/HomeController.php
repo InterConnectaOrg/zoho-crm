@@ -8,9 +8,13 @@ use Zoho\CRM\ZohoCRM;
 
 class HomeController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        // return view('interconnecta/zoho-crm::index');
+        return view('interconnecta/zoho-crm::index', ['zohoCRMJsVariables' => ZohoCRM::jsVariables()]);
+    }
+
+    public function connect()
+    {
         return view('interconnecta/zoho-crm::connect', ['zohoCRMJsVariables' => ZohoCRM::jsVariables()]);
     }
 
