@@ -3,11 +3,9 @@
 namespace Zoho\CRM\Console;
 
 use Illuminate\Console\Command;
-
-use Zoho\CRM\Helpers\Credentials;
-
 use zcrmsdk\crm\setup\restclient\ZCRMRestClient;
 use zcrmsdk\oauth\ZohoOAuth;
+use Zoho\CRM\Helpers\Credentials;
 
 class SetupCommand extends Command
 {
@@ -29,8 +27,6 @@ class SetupCommand extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -38,16 +34,18 @@ class SetupCommand extends Command
     }
 
     /**
-     * [FunctionName description]
-     * @param string $value [description]
+     * Execute Console Command.
      */
     public function handle()
     {
-        $grantToken = $this->ask('Please enter your Grant Token');
-        if ( !$grantToken ) {
+        $grantToken = $this->ask('Please enter your Grant Token...');
+
+        if (!$grantToken) {
             $this->comment('The Grant Token is required.');
+
             return;
         }
+
         try {
             ZCRMRestClient::initialize($this->getAllCredentials());
 

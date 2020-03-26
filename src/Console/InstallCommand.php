@@ -29,23 +29,20 @@ class InstallCommand extends Command
     }
 
     /**
-     * [FunctionName description].
-     *
-     * @param string $value [description]
+     * Execute Console Command.
      */
     public function handle()
     {
-        // $this->comment('Publishing Zoho CRM OAuth files ...');
-        // $this->callSilent('vendor:publish', ['--tag' => 'zoho-crm-oauth']);
+        $this->comment('Installing Zoho CRM Wrapper...');
 
-        // $this->comment('Publishing Zoho CRM Configuration ...');
-        // $this->callSilent('vendor:publish', ['--tag' => 'zoho-crm-config']);
+        $this->comment('Publishing Zoho CRM OAuth files ...');
+        $this->callSilent('vendor:publish', ['--tag' => 'zoho-crm-oauth']);
 
-        $this->comment('Installing Zoho CRM Wrapper ...');
+        $this->comment('Publishing Zoho CRM Configuration ...');
+        $this->callSilent('vendor:publish', ['--tag' => 'zoho-crm-config']);
 
-        $this->call('vendor:publish', [
-            '--provider' => 'Zoho\\CRM\\ZohoCRMServiceProvider',
-        ]);
+        $this->comment('Publishing Zoho CRM Assets ...');
+        $this->callSilent('vendor:publish', ['--tag' => 'zoho-crm-assets']);
 
         $this->info('Zoho CRM scaffolding installed successfully.');
     }
