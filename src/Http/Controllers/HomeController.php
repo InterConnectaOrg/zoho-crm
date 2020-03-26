@@ -2,92 +2,169 @@
 
 namespace Zoho\CRM\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
+use Log;
+use zcrmsdk\crm\setup\restclient\ZCRMRestClient;
+use zcrmsdk\oauth\ZohoOAuth;
+use Zoho\CRM\Facades\APIResponse;
+use Zoho\CRM\Helpers\Credentials;
+use Zoho\CRM\Http\Requests\SaveSecretsFormRequest;
+use Zoho\CRM\Http\Requests\StoreFormRequest;
 use Zoho\CRM\ZohoCRM;
 
 class HomeController extends Controller
 {
+    use Credentials;
+
+    /**
+     * Return Default App View.
+     */
     public function index()
     {
         return view('interconnecta/zoho-crm::index', ['zohoCRMJsVariables' => ZohoCRM::jsVariables()]);
     }
 
+    /**
+     * Return View to be Used by Connect.
+     */
     public function connect()
     {
         return view('interconnecta/zoho-crm::connect', ['zohoCRMJsVariables' => ZohoCRM::jsVariables()]);
     }
 
-    public function redirectHandler(Request $request)
+    /**
+     * Process Secrets.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function processSecrets(SaveSecretsFormRequest $request)
     {
-        Cache::add('granttoken', $request->input('code'));
+        try {
+            $grantToken = $request->input('code');
 
-        $this->saveSecrets();
+            $this->saveSecretsInEnvironmentFile();
 
-        $credentials = [
-            'clientid' => Cache::pull('clientid'),
-            'clientsecret' => Cache::pull('clientsecret'),
-            'redirecturi' => Cache::pull('redirecturi'),
-            'email' => Cache::pull('email'),
-        ];
+            $this->initializeZohoCRMClient($grantToken);
 
-        Cache::pull('granttoken');
+            return APIResponse::success(static::getSecrets());
+        } catch (\Exception $e) {
+            Log::error('Error Initializing Zoho CRM Client via HTTP', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'code' => $e->getCode(),
+            ]);
 
-        return response($credentials, 200);
+            return APIResponse::fail($e->getMessage());
+        }
     }
 
-    public function store(Request $request)
+    /**
+     * Save Secrets in Cache.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(StoreFormRequest $request)
+    {
+        try {
+            static::validateEnvironmentFile();
+
+            Cache::add('clientid', $request->input('clientid'));
+            Cache::add('clientsecret', $request->input('clientsecret'));
+            Cache::add('redirecturi', $request->input('redirecturi'));
+            Cache::add('email', $request->input('email'));
+
+            return APIResponse::success(null, 'Secrets were saved in cache successfully');
+        } catch (\Exception $e) {
+            return APIResponse::fail($e->getMessage());
+        }
+    }
+
+    /**
+     * Validate A Environment File Exists.
+     *
+     * @throws \Exception
+     */
+    protected static function validateEnvironmentFile()
     {
         if (!file_exists(base_path('.env'))) {
-            return response('Please, create a default environment file before setting up the connection.', 404);
+            throw new \Exception('Please create a environment file before setting up the connection');
         }
-
-        $clientId = $request->input('clientid');
-        $clientSecret = $request->input('clientsecret');
-        $redirectUri = $request->input('redirecturi');
-        $accessType = $request->input('accesstype');
-        $scope = $request->input('scope');
-        $email = $request->input('email');
-
-        Cache::add('clientid', $clientId);
-        Cache::add('clientsecret', $clientSecret);
-        Cache::add('redirecturi', $redirectUri);
-        Cache::add('email', $email);
-
-        return response('Secrets were saved in cache successfully');
     }
 
-    protected function saveSecrets()
+    /**
+     * Save Secrets In Environment File.
+     *
+     * @param string $grantToken
+     */
+    protected function saveSecretsInEnvironmentFile()
     {
-        // Given the Grant Token (code) is valid
-
-        // Then Save keys in .env file
-
-        $credentials = [
-            'clientid' => 'ZOHO_CRM_CLIENT_ID',
-            'clientsecret' => 'ZOHO_CRM_CLIENT_SECRET',
-            'redirecturi' => 'ZOHO_CRM_REDIRECT_URI',
-            'email' => 'ZOHO_CRM_CURRENT_USER_EMAIL',
-            'granttoken' => 'ZOHO_CRM_GRANT_TOKEN',
-        ];
-
         $envFile = file_get_contents(base_path('.env'));
 
-        foreach ($credentials as $key => $value) {
-            $cachedValue = Cache::get($key, '');
+        foreach (static::getZohoCRMVariablesNames() as $key => $secret) {
+            $value = Cache::pull($secret, '');
 
-            if ($this->keyInFile($envFile, $value)) {
-                // If found key, replace value
-                $envFile = preg_replace("/^{$value}=.*/m", $value.'='.$cachedValue, $envFile);
+            if (static::keyInFile($envFile, $key)) {
+                $envFile = preg_replace("/^{$key}=.*/m", $key.'='.$value, $envFile);
             } else {
-                // if key is not found, add key and value
-                $envFile = $envFile.PHP_EOL."{$value}={$cachedValue}";
+                $envFile = $envFile.PHP_EOL."{$key}={$value}";
             }
         }
 
         file_put_contents(base_path('.env'), $envFile);
+    }
 
-        // $this->initializeZohoCRM();
+    /**
+     * Return Zoho CRM Environment Keys.
+     *
+     * @return array
+     */
+    protected static function getZohoCRMVariablesNames()
+    {
+        return [
+            'ZOHO_CRM_CLIENT_ID' => 'clientid',
+            'ZOHO_CRM_CLIENT_SECRET' => 'clientsecret',
+            'ZOHO_CRM_REDIRECT_URI' => 'redirecturi',
+            'ZOHO_CRM_CURRENT_USER_EMAIL' => 'email',
+        ];
+    }
+
+    /**
+     * Intialize Zoho CRM Client.
+     *
+     * @param string $grantToken
+     */
+    protected function initializeZohoCRMClient($grantToken)
+    {
+        try {
+            if (!isset($grantToken)) {
+                throw new \Exception('The Grant Token is required');
+            }
+
+            ZCRMRestClient::initialize($this->getAllCredentials());
+
+            $oAuthClient = ZohoOAuth::getClientInstance();
+
+            $oAuthClient->generateAccessToken($grantToken);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Return Zoho CRM Environment Values.
+     *
+     * @return array
+     */
+    protected static function getSecrets()
+    {
+        return [
+            'clientid' => config('zoho-crm.client_id'),
+            'clientsecret' => config('zoho-crm.client_secret'),
+            'redirecturi' => config('zoho-crm.redirect_uri'),
+            'email' => config('zoho-crm.current_user_email'),
+        ];
     }
 
     /**
@@ -98,7 +175,7 @@ class HomeController extends Controller
      *
      * @return bool
      */
-    protected function keyInFile($file, $search)
+    protected static function keyInFile($file, $search)
     {
         if (strpos($file, $search)) {
             return true;
