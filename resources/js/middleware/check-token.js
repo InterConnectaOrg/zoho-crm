@@ -1,16 +1,18 @@
 export default async ({ to, from, next }) => {
 	if (!to.params.record) {
 		if (to.query.code && to.query.location) {
+			let body = { code: to.query.code, location: to.query.location }
+
 			await axios
-				.post(ZohoCRM.apiPath + "/api/oauthredirect", { code: to.query.code })
+				.post(ZohoCRM.apiPath + "/api/oauthredirect", body)
 				.then(({ data }) => {
 					next({
 						name: to.name,
-						params: { record: data }
+						params: { record: data.data }
 					})
 				})
 				.catch(err => {
-					console.error("Catched Err in Middleware:", err);
+					console.error("In Middleware:", err);
 				});
 		} else {
 			// Passing params to avoid warning in console: 

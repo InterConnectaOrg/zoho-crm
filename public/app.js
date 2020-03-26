@@ -2146,11 +2146,10 @@ __webpack_require__.r(__webpack_exports__);
     submit: function submit() {
       var _this = this;
 
-      axios // .post(ZohoCRM.basePath + "/api/save", this.form)
-      .post(ZohoCRM.apiPath + "/api/save", this.form).then(function (result) {
+      axios.post(ZohoCRM.apiPath + "/api/save", this.form).then(function (result) {
         window.location.replace(_this.authenticationURL);
       })["catch"](function (err) {
-        console.log("err :", err);
+        console.error(err);
       });
     },
     checkProps: function checkProps() {
@@ -19119,7 +19118,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/(function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
-    var to, from, next;
+    var to, from, next, body;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -19127,35 +19126,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             to = _ref.to, from = _ref.from, next = _ref.next;
 
             if (to.params.record) {
-              _context.next = 10;
+              _context.next = 11;
               break;
             }
 
             if (!(to.query.code && to.query.location)) {
-              _context.next = 7;
+              _context.next = 8;
               break;
             }
 
-            _context.next = 5;
-            return axios.post(ZohoCRM.apiPath + "/api/oauthredirect", {
-              code: to.query.code
-            }).then(function (_ref3) {
+            body = {
+              code: to.query.code,
+              location: to.query.location
+            };
+            _context.next = 6;
+            return axios.post(ZohoCRM.apiPath + "/api/oauthredirect", body).then(function (_ref3) {
               var data = _ref3.data;
               next({
                 name: to.name,
                 params: {
-                  record: data
+                  record: data.data
                 }
               });
             })["catch"](function (err) {
-              console.error("Catched Err in Middleware:", err);
+              console.error("In Middleware:", err);
             });
 
-          case 5:
-            _context.next = 8;
+          case 6:
+            _context.next = 9;
             break;
 
-          case 7:
+          case 8:
             // Passing params to avoid warning in console: 
             // https://github.com/vuejs/vue-router/issues/724
             next({
@@ -19165,14 +19166,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }
             });
 
-          case 8:
-            _context.next = 11;
+          case 9:
+            _context.next = 12;
             break;
 
-          case 10:
+          case 11:
             next();
 
-          case 11:
+          case 12:
           case "end":
             return _context.stop();
         }

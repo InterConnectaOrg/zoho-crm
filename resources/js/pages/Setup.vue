@@ -171,13 +171,12 @@ export default {
 	methods: {
 		submit() {
 			axios
-				// .post(ZohoCRM.basePath + "/api/save", this.form)
 				.post(ZohoCRM.apiPath + "/api/save", this.form)
 				.then(result => {
 					window.location.replace(this.authenticationURL);
 				})
 				.catch(err => {
-					console.log("err :", err);
+					console.error(err);
 				});
 		},
 
