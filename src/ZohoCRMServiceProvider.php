@@ -2,6 +2,7 @@
 
 namespace Zoho\CRM;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class ZohoCRMServiceProvider extends ServiceProvider
@@ -18,6 +19,8 @@ class ZohoCRMServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerRoutes();
+        $this->registerResources();
         $this->registerPublishing();
     }
 
@@ -44,14 +47,32 @@ class ZohoCRMServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the Zoho CRM Routes.
+     */
+    private function registerRoutes()
+    {
+        Route::group([
+            'domain' => null,
+            'prefix' => config('zoho-crm.path'),
+            'namespace' => '\Zoho\CRM\Http\Controllers',
+        ], function () {
+            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        });
+    }
+
+    /**
+     * Register the Zoho CRM Resources.
+     */
+    private function registerResources()
+    {
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'interconnecta/zoho-crm');
+    }
+
+    /**
      * Register the package's publishable resources.
      */
     private function registerPublishing()
     {
-        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'interconnecta/zoho-crm');
-
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/Storage/oauth' => storage_path('app/zoho/crm/oauth'),
