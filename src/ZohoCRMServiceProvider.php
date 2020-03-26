@@ -2,7 +2,6 @@
 
 namespace Zoho\CRM;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class ZohoCRMServiceProvider extends ServiceProvider
@@ -51,13 +50,7 @@ class ZohoCRMServiceProvider extends ServiceProvider
      */
     private function registerRoutes()
     {
-        Route::group([
-            'domain' => null,
-            'prefix' => config('zoho-crm.path'),
-            'namespace' => '\Zoho\CRM\Http\Controllers',
-        ], function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-        });
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
     }
 
     /**
