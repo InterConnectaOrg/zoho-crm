@@ -153,15 +153,15 @@ return [
     |
     */
 
-    'package_label' => 'Zoho CRM',
+    'package_label' => 'Zoho CRM Wrapper',
 
     /*
     |--------------------------------------------------------------------------
-    | Zoho CRM Domain
+    | Package Domain
     |--------------------------------------------------------------------------
     |
-    | This is the subdomain where Horizon will be accessible from. If this
-    | setting is null, Horizon will reside under the same domain as the
+    | This is the subdomain where the package will be accessible from. If this
+    | setting is null, Connect Manager will reside under the same domain as the
     | application. Otherwise, this value will serve as the subdomain.
     |
     */
@@ -170,13 +170,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Zoho CRM Path
+    | Package Path
     |--------------------------------------------------------------------------
     |
-    | This is the URI path where Horizon will be accessible from. Feel free
-    | to change this path to anything you like. Note that the URI will not
-    | affect the paths of its internal API that aren't exposed to users.
-    |
+    | This is the URI path where the package routes will be accessible from. Feel free
+    | to change this path to anything you like.
     */
 
     'path' => 'zoho-crm',
