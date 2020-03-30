@@ -103,7 +103,7 @@ class HomeController extends Controller
         $envFile = file_get_contents(base_path('.env'));
 
         foreach (static::getZohoCRMVariablesNames() as $key => $secret) {
-            $value = Cache::pull($secret, '');
+            $value = Cache::get($secret, '');
 
             if (static::keyInFile($envFile, $key)) {
                 $envFile = preg_replace("/^{$key}=.*/m", $key.'='.$value, $envFile);
@@ -142,7 +142,7 @@ class HomeController extends Controller
                 throw new \Exception('The Grant Token is required');
             }
 
-            ZCRMRestClient::initialize($this->getAllCredentials());
+            ZCRMRestClient::initialize($this->getCachedCredentials());
 
             $oAuthClient = ZohoOAuth::getClientInstance();
 
@@ -160,10 +160,10 @@ class HomeController extends Controller
     protected static function getSecrets()
     {
         return [
-            'clientid' => config('zoho-crm.client_id'),
-            'clientsecret' => config('zoho-crm.client_secret'),
-            'redirecturi' => config('zoho-crm.redirect_uri'),
-            'email' => config('zoho-crm.current_user_email'),
+            'clientid' => Cache::pull('clientid', ''),
+            'clientsecret' => Cache::pull('clientsecret', ''),
+            'redirecturi' => Cache::pull('redirecturi', ''),
+            'email' => Cache::pull('email', ''),
         ];
     }
 
