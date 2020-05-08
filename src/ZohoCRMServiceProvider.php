@@ -55,6 +55,7 @@ class ZohoCRMServiceProvider extends ServiceProvider
         $this->commands([
             Console\InstallCommand::class,
             Console\SetupCommand::class,
+            Console\RefreshTokenCommand::class
         ]);
 
         $this->app->singleton('zohocrm', function ($app) {
