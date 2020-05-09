@@ -48,7 +48,7 @@ class RefreshTokenCommand extends Command
             $this->comment('The Refresh Token is required.');
             return;
         }
-        $userEmailId = $this->ask('Please enter your user email id');
+        $userEmailId = $this->ask('Please enter your User Email Id');
         if ( !$userEmailId ) {
             $this->comment('The User Email is required.');
             return;
@@ -60,6 +60,7 @@ class RefreshTokenCommand extends Command
             $oAuthTokens = $oAuthClient->generateAccessTokenFromRefreshToken($refreshToken, $userEmailId);
 
             $this->info('Zoho CRM has been set up successfully.');
+            $this->info("This is your Refresh Token: ".$oAuthTokens->getRefreshToken());
         } catch (\Exception $e) {
             report($e);
             $this->error($e->getMessage());
