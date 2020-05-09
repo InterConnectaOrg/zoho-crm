@@ -60,7 +60,6 @@ class RefreshTokenCommand extends Command
             $oAuthTokens = $oAuthClient->generateAccessTokenFromRefreshToken($refreshToken, $userEmailId);
 
             $this->info('Zoho CRM has been set up successfully.');
-            $this->info("This is your Refresh Token: ".$oAuthTokens->getRefreshToken());
         } catch (\Exception $e) {
             report($e);
             $this->error($e->getMessage());
