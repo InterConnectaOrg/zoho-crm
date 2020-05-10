@@ -1,3 +1,18 @@
+## [0.9.0 - (2020-05-08)](https://github.com/InterConnecta/zoho-crm/compare/0.8.0...0.9.0)
+
+  - [commands] Updated Refresh Token command ([eeb16c6](https://github.com/InterConnecta/zoho-crm/commit/eeb16c6))
+  - [commands] Updated Setup and Refresh Token command ([c68f9e0](https://github.com/InterConnecta/zoho-crm/commit/c68f9e0))
+  - [refresh-token] Added new setup command ([49fc24a](https://github.com/InterConnecta/zoho-crm/commit/49fc24a))
+  - [search-records] Added expanded parameter ([b01572e](https://github.com/InterConnecta/zoho-crm/commit/b01572e))
+
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+
 ## [0.8.0 - (2020-01-15)](https://github.com/InterConnecta/zoho-crm/compare/0.7.5...0.8.0)
 
 ### Added
