@@ -191,7 +191,7 @@ class API
      * @param  array  $params   [description]
      * @return [type]           [description]
      */
-    public function searchRecords($module, $mapCriteria, $default = false, $params = [])
+    public function searchRecords($module, $mapCriteria, $default = false, $params = [], $expanded = false)
     {
         try {
             $records = [];
@@ -202,16 +202,35 @@ class API
 
             $parsedCriteria = $default ? $mapCriteria : self::buildCriteria($mapCriteria);
 
-            while ($moreRecords) {
-                $moduleInstance = $this->restClient->getModuleInstance($module);
-                $response = $moduleInstance->searchRecordsByCriteria($parsedCriteria, $page, $perPage);
-                $records = $response->getData();
-                $requestInfo = $response->getInfo();
-                $parsedRecords = self::parseRecords($records);
-                $responseRecords = collect($responseRecords)->concat($parsedRecords)->all();
-                $moreRecords = $requestInfo->getMoreRecords();
-                $page++;
+            if($expanded) {
+                while ($moreRecords) {
+                    $moduleInstance = $this->restClient->getModuleInstance($module);
+                    $response = $moduleInstance->searchRecordsByCriteria($parsedCriteria, $page, $perPage);
+                    $records = $response->getData();
+                    $requestInfo = $response->getInfo();
+                    $parsedRecords = self::parseRecords($records);
+                    $responseRecords = collect($responseRecords)
+                        ->concat($parsedRecords)
+                        ->all();
+                    $moreRecords = $requestInfo->getMoreRecords();
+                    $page++;
+                }
+
+                return [
+                    'records' => $responseRecords,
+                    'count' => count($responseRecords)
+                ];
             }
+
+            $moduleInstance = $this->restClient->getModuleInstance($module);
+            $response = $moduleInstance->searchRecordsByCriteria($parsedCriteria, $page, $perPage);
+            $records = $response->getData();
+            $requestInfo = $response->getInfo();
+            $parsedRecords = self::parseRecords($records);
+            $responseRecords = collect($responseRecords)
+                ->concat($parsedRecords)
+                ->all();
+
             return [
                 'records' => $responseRecords,
                 'info' => [
@@ -221,7 +240,8 @@ class API
                     'per_page' => $requestInfo->getPerPage(),
                 ],
             ];
-        } catch (ZCRMException $e) {
+
+        } catch(ZCRMException $e) {
             return [
                 'info' => [
                     'count' => 0,

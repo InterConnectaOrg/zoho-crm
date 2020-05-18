@@ -1,3 +1,12 @@
+## [0.9.0 - (2020-05-08)](https://github.com/InterConnecta/zoho-crm/compare/0.8.0...0.9.0)
+
+### Added
+  - [refresh-token] Added a new command to generate an access token based on a refresh token ([49fc24a](https://github.com/InterConnecta/zoho-crm/commit/49fc24a),[eeb16c6](https://github.com/InterConnecta/zoho-crm/commit/eeb16c6))
+### Changed
+  - [search-records] Added expanded parameter ([b01572e](https://github.com/InterConnecta/zoho-crm/commit/b01572e))
+  - [commands] Updated setup command to now display a message when the refresh token is not available. ([c68f9e0](https://github.com/InterConnecta/zoho-crm/commit/c68f9e0))
+
+
 ## [0.8.0 - (2020-01-15)](https://github.com/InterConnecta/zoho-crm/compare/0.7.5...0.8.0)
 
 ### Added

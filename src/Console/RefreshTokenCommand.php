@@ -9,7 +9,7 @@ use Zoho\CRM\Helpers\Credentials;
 use zcrmsdk\crm\setup\restclient\ZCRMRestClient;
 use zcrmsdk\oauth\ZohoOAuth;
 
-class SetupCommand extends Command
+class RefreshTokenCommand extends Command
 {
     use Credentials;
 
@@ -18,14 +18,14 @@ class SetupCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'zoho-crm:setup';
+    protected $signature = 'zoho-crm:refresh-token';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Setup Zoho CRM';
+    protected $description = 'Second setup of Zoho CRM';
 
     /**
      * Create a new command instance.
@@ -43,23 +43,23 @@ class SetupCommand extends Command
      */
     public function handle()
     {
-        $grantToken = $this->ask('Please enter your Grant Token');
-        if ( !$grantToken ) {
-            $this->comment('The Grant Token is required.');
+        $refreshToken = $this->ask('Please enter your Refresh Token');
+        if ( !$refreshToken ) {
+            $this->comment('The Refresh Token is required.');
+            return;
+        }
+        $userEmailId = $this->ask('Please enter your User Email Id');
+        if ( !$userEmailId ) {
+            $this->comment('The User Email is required.');
             return;
         }
         try {
             ZCRMRestClient::initialize($this->getAllCredentials());
 
             $oAuthClient = ZohoOAuth::getClientInstance();
-            $oAuthTokens = $oAuthClient->generateAccessToken($grantToken);
+            $oAuthTokens = $oAuthClient->generateAccessTokenFromRefreshToken($refreshToken, $userEmailId);
 
-            $this->info("Zoho CRM has been set up successfully.");
-            if($oAuthTokens->getRefreshToken() == null || $oAuthTokens->getRefreshToken() == "NULL") {
-                $this->info("There is no Refresh Token in the setup. Please use the Refresh Token command.");
-            } else {
-                $this->info("This is your Refresh Token: ".$oAuthTokens->getRefreshToken());
-            }
+            $this->info('Zoho CRM has been set up successfully.');
         } catch (\Exception $e) {
             report($e);
             $this->error($e->getMessage());
