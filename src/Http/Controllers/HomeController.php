@@ -4,6 +4,7 @@ namespace Zoho\CRM\Http\Controllers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Request;
 use Log;
 use zcrmsdk\crm\setup\restclient\ZCRMRestClient;
 use zcrmsdk\oauth\ZohoOAuth;
@@ -43,8 +44,6 @@ class HomeController extends Controller
         try {
             $grantToken = $request->input('code');
 
-            $this->saveSecretsInEnvironmentFile();
-
             $this->initializeZohoCRMClient($grantToken);
 
             return APIResponse::success(static::getSecrets());
@@ -61,7 +60,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Save Secrets in Cache.
+     * Save Secrets in environment.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -70,12 +69,9 @@ class HomeController extends Controller
         try {
             static::validateEnvironmentFile();
 
-            Cache::add('clientid', $request->input('clientid'));
-            Cache::add('clientsecret', $request->input('clientsecret'));
-            Cache::add('redirecturi', $request->input('redirecturi'));
-            Cache::add('email', $request->input('email'));
+            $this->saveSecretsInEnvironmentFile($request);
 
-            return APIResponse::success(null, 'Secrets were saved in cache successfully');
+            return APIResponse::success(null, 'Secrets saved in environment successfully');
         } catch (\Exception $e) {
             return APIResponse::fail($e->getMessage());
         }
@@ -98,17 +94,17 @@ class HomeController extends Controller
      *
      * @param string $grantToken
      */
-    protected function saveSecretsInEnvironmentFile()
+    protected function saveSecretsInEnvironmentFile($request)
     {
         $envFile = file_get_contents(base_path('.env'));
 
         foreach (static::getZohoCRMVariablesNames() as $key => $secret) {
-            $value = Cache::get($secret, '');
+            $value = $request->input($secret);
 
             if (static::keyInFile($envFile, $key)) {
-                $envFile = preg_replace("/^{$key}=.*/m", $key.'='.$value, $envFile);
+                $envFile = preg_replace("/^{$key}=.*/m", $key . '=' . $value, $envFile);
             } else {
-                $envFile = $envFile.PHP_EOL."{$key}={$value}";
+                $envFile = $envFile . PHP_EOL . "{$key}={$value}";
             }
         }
 
@@ -142,7 +138,7 @@ class HomeController extends Controller
                 throw new \Exception('The Grant Token is required');
             }
 
-            ZCRMRestClient::initialize($this->getCachedCredentials());
+            ZCRMRestClient::initialize($this->getAllCredentials());
 
             $oAuthClient = ZohoOAuth::getClientInstance();
 
@@ -160,10 +156,10 @@ class HomeController extends Controller
     protected static function getSecrets()
     {
         return [
-            'clientid' => Cache::pull('clientid', ''),
-            'clientsecret' => Cache::pull('clientsecret', ''),
-            'redirecturi' => Cache::pull('redirecturi', ''),
-            'email' => Cache::pull('email', ''),
+            'client_id' => config('zoho-crm.client_id'),
+            'client_secret' => config('zoho-crm.client_secret'),
+            'redirect_uri' => config('zoho-crm.redirect_uri'),
+            'email' => config('zoho-crm.current_user_email'),
         ];
     }
 
