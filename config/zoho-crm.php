@@ -153,7 +153,11 @@ return [
     |
     */
 
-    'package_label' => 'Zoho CRM Wrapper',
+    'package_label' => 'Zoho CRM Connector',
+
+    'package_icon' => 'fa-plug',
+
+    'package_menu_items' => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -178,4 +182,6 @@ return [
     */
 
     'path' => 'zoho-crm',
+
+    'pathWithQueryParams' => false
 ];
