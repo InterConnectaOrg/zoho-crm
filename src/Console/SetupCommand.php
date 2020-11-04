@@ -52,7 +52,12 @@ class SetupCommand extends Command
             $oAuthClient = ZohoOAuth::getClientInstance();
             $oAuthTokens = $oAuthClient->generateAccessToken($grantToken);
 
-            $this->info('Zoho CRM has been set up successfully.');
+            $this->info("Zoho CRM has been set up successfully.");
+            if($oAuthTokens->getRefreshToken() == null || $oAuthTokens->getRefreshToken() == "NULL") {
+                $this->info("There is no Refresh Token in the setup. Please use the Refresh Token command.");
+            } else {
+                $this->info("This is your Refresh Token: ".$oAuthTokens->getRefreshToken());
+            }
         } catch (\Exception $e) {
             report($e);
             $this->error($e->getMessage());
