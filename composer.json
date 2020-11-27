@@ -14,8 +14,8 @@
     ],
     "require": {
         "php": ">=5.6.4",
-        "illuminate/console": "^5.4.0|^7.0",
-        "illuminate/support": "^5.4.0|^7.0",
+        "illuminate/console": "^5.4.0|^6.0",
+        "illuminate/support": "^5.4.0|^6.0",
         "zohocrm/php-sdk-archive": "2.0.6"
     },
     "autoload": {
